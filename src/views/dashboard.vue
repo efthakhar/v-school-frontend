@@ -20,7 +20,10 @@ export default{
         <div class="dashboard-header">
             <h2>Hi this is dihab</h2>
         </div>
-        <RouterView />
+        <div class="main-content">
+             <RouterView />
+        </div>
+       
     </div>
 
 </div>
@@ -48,8 +51,14 @@ export default{
 .dashboard-content{
     flex: 1 1 auto;
     background-color: whitesmoke;
+     
+}
 
-    padding: 10px;
+.main-content{
+    margin:10px;
+    box-shadow: 1px 1px 12px grey;
+    padding:10px;
+    border-radius: 10px;
 }
 
 @media (max-width:750px){
@@ -64,5 +73,7 @@ export default{
 .dashboard-header{
     margin: 10px;
     box-shadow: 1px 1px 12px grey;
+    padding:10px;
+    border-radius: 10px; 
 }
 </style>
