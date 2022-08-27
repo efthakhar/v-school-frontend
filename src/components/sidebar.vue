@@ -1,9 +1,8 @@
 <script>
 import SideNavItem from "./side-nav-item.vue"
 
-
 export default{
-     components:{ SideNavItem },
+     components:{ SideNavItem},
     data(){
         return{
             navlinks:[

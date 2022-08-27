@@ -1,9 +1,19 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import { sidebarStatus } from '../stores/sidebar-status.js'
+
 import Sidebar from '../components/sidebar.vue';
+import Header from '../components/header.vue';
+
+
 
 export default{
-    components:{ Sidebar }
+    components:{ Sidebar, Header},
+    data(){
+        return{
+            sidebar_status: sidebarStatus()
+        }
+    }
 }
 
 </script>
@@ -12,14 +22,13 @@ export default{
 
 <div class="dashboard">
 
-    <div class="dashboard-sidebar">
+    <div class="dashboard-sidebar" 
+     :class=" sidebar_status.collapsed == true ? 'dashboard-sidebar-responsive':''">
         <Sidebar/>
     </div>
 
     <div class="dashboard-content">
-        <div class="dashboard-header">
-            <h2>Hi this is dihab</h2>
-        </div>
+        <Header />
         <div class="main-content">
              <RouterView />
         </div>
@@ -47,6 +56,7 @@ export default{
     box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.37);
     height: 100vh;
     overflow: auto;
+    transition: all .5s;
 }
 .dashboard-content{
     flex: 1 1 auto;
@@ -61,12 +71,17 @@ export default{
     border-radius: 10px;
 }
 
-@media (max-width:750px){
-    .dashboard-sidebar{
+.dashboard-sidebar-responsive{
+        position: absolute;
+        left:-100%;
+}
+
+/* @media (max-width:750px){
+    .dashboard-sidebar-responsive{
         position: absolute;
         left:-100%;
     }
-}
+} */
 
 
 /* dashboard header */
