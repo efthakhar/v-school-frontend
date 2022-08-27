@@ -16,7 +16,7 @@ export default{
                     ]
 
                 },
-            
+
                 {   
                     navlinktext:'about',
                     navlink:'/home7'

@@ -15,5 +15,8 @@ export const sidebarStatus = defineStore('sidebar_status', {
       toggleCollapse() {
          this.collapsed = !this.collapsed
       },
+      hideSidebar(){
+        this.collapsed = true
+      }
     },
 })

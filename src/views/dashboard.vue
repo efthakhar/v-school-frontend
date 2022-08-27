@@ -13,6 +13,14 @@ export default{
         return{
             sidebar_status: sidebarStatus()
         }
+    },
+    methods:{
+
+    },
+    mounted(){
+        if (window.innerWidth < 760) {
+            this.sidebar_status.hideSidebar()
+        } 
     }
 }
 
@@ -76,6 +84,7 @@ export default{
         left:-100%;
 }
 
+
 /* @media (max-width:750px){
     .dashboard-sidebar-responsive{
         position: absolute;
@@ -91,4 +100,5 @@ export default{
     padding:10px;
     border-radius: 10px; 
 }
+
 </style>
