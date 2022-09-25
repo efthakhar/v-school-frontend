@@ -1,17 +1,26 @@
 <script>
+import axios from 'axios'    
+import { useAuthInfo } from '../stores/authinfo'    
 import { sidebarStatus } from '../stores/sidebar-status.js'
 
 export default{
     data(){
         return{
-             sidebar_status: sidebarStatus()
+             sidebar_status: sidebarStatus(),
+             authStore: useAuthInfo()
         }
     },
     methods:{
         toggleSidebar(){
             this.sidebar_status.toggleCollapse
-        }
-    }
+        },
+        async logout(){
+            await axios.get('http://127.0.0.1:8000/logout')
+            this.authStore.logout()
+            this.$router.push('login')
+       },
+    },
+   
     
 }
 
@@ -35,14 +44,29 @@ export default{
             </g>
             <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
             </svg>
-    </div>       
+    </div>   
+    
+    <div class="ms-auto user_info">
+        <p class="m-2">hi, {{authStore.getAuthUser.name}} </p>
+        <a @click="logout" class="btn btn-primary">logout</a>
+    </div>    
 </div> 
 </template>
 
 <style>
+/* dashboard header */
 .dashboard-header{
+    margin: 10px;
+    box-shadow: 1px 1px 12px grey;
+    padding:10px;
+    border-radius: 10px; 
     background-color: #fff;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
+
+
 .menu-icon{
     display: inline-block;
 }
@@ -59,4 +83,5 @@ export default{
     cursor: pointer;
     fill:#196ce7;
 }
+.user_info{ display: flex ;}
 </style>

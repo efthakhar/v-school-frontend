@@ -6,21 +6,25 @@ export default{
     data(){
         return{
             navlinks:[
+                // {   
+                //     navlinktext:'HOME',
+                //     navlink:'/home',
+                //     subnavlinks:[
+                //         { subnavtext:'home', subnavlink:'/home'},
+                //         { subnavtext:'home2', subnavlink:'/home2'},
+                //         { subnavtext:'home3', subnavlink:'/home3'},
+                //     ]
+
+                // },
+
                 {   
-                    navlinktext:'HOME',
-                    navlink:'/home',
+                    navlinktext:'academic',
+                    navlink:'/dashboard/academic',
                     subnavlinks:[
-                        { subnavtext:'home', subnavlink:'/home'},
-                        { subnavtext:'home2', subnavlink:'/home2'},
-                        { subnavtext:'home3', subnavlink:'/home3'},
+                        { subnavtext:'sessions', subnavlink:'/dashboard/sessions'},
                     ]
-
                 },
-
-                {   
-                    navlinktext:'about',
-                    navlink:'/home7'
-                },
+                
                 
             ]
         }
@@ -30,6 +34,7 @@ export default{
 </script>
 
 <template>
+<div>
     <div class="sidebar-logo">
         <a href="">RobustErp</a>
     </div>
@@ -38,6 +43,8 @@ export default{
         :navdetails="navlink"
         /> 
     </ul>
+</div>
+
 </template>
 
 <style>

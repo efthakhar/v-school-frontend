@@ -1,4 +1,5 @@
 <script>
+
 import { RouterLink, RouterView } from 'vue-router'
 import { sidebarStatus } from '../stores/sidebar-status.js'
 
@@ -11,7 +12,8 @@ export default{
     components:{ Sidebar, Header},
     data(){
         return{
-            sidebar_status: sidebarStatus()
+            sidebar_status: sidebarStatus(),
+           
         }
     },
     methods:{
@@ -67,9 +69,9 @@ export default{
     transition: all .5s;
 }
 .dashboard-content{
-    flex: 1 1 auto;
-    background-color: whitesmoke;
-     
+    flex: 1 1 0;
+    background-color: rgb(255, 255, 255);
+    overflow: auto;
 }
 
 .main-content{
@@ -84,21 +86,5 @@ export default{
         left:-100%;
 }
 
-
-/* @media (max-width:750px){
-    .dashboard-sidebar-responsive{
-        position: absolute;
-        left:-100%;
-    }
-} */
-
-
-/* dashboard header */
-.dashboard-header{
-    margin: 10px;
-    box-shadow: 1px 1px 12px grey;
-    padding:10px;
-    border-radius: 10px; 
-}
 
 </style>

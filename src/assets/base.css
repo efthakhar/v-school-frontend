@@ -5,5 +5,26 @@
 */
 
 
+*,*::after,*::before{ margin: 0; padding: 0; box-sizing: border-box;}
+body{ width: 100vw; font-family: 'Roboto', sans-serif;}
+a{ text-decoration: none;}
+
+/* Sidebar  */
+/* for crome */
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    background: #000000;
+}
+::-webkit-scrollbar-thumb {
+    background: #5797F8;
+    border-radius: 10px;
+}
+    /* for mozilla */
+.dashboard-sidebar{  
+        scrollbar-width: thin;
+        scrollbar-color: #5797F8 black;
+}
 
 
