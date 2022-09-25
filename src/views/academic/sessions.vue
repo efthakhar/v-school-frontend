@@ -58,6 +58,7 @@ import axios from 'axios'
                                 <span class="action_btn action_edit_btn" title="edit">&#9998;</span>
                                 <span class="action_btn action_delete_btn" title="delete">&#9746;</span>
                                 <span class="action_btn action_view_btn" title="view">&#9906;</span>
+                                
                             </td>
                         </tr>
                     </tbody>
