@@ -8,12 +8,21 @@ import axios from 'axios'
         }
     },
     methods:{
+
+
         getSessions(){
             axios.get(`${this.api_url}/api/sessions`)
             .then((response) => {
                this.sessions = response.data
             })
+        },
+
+       async deleteSession(id){
+           await axios.delete(`${this.api_url}/api/sessions/${id}`)
+            .then((response) => console.log(response.data))
+            this.getSessions()
         }
+
     },
     mounted(){
         this.getSessions()
@@ -26,7 +35,9 @@ import axios from 'axios'
 <div class="page-view">
     <div class="page-top-nav">
         <h4 class="blue-txt">All Sessions</h4>
-        <a class="btn btn-primary btn-sm ms-auto">add session</a>
+        <router-link :to="{ name: 'add-session' }" class="btn btn-primary btn-sm ms-auto" > 
+            add session 
+        </router-link>
     </div>
     <div class="page-main-content">
          
@@ -55,10 +66,19 @@ import axios from 'axios'
                                 <input type="checkbox" :checked="session.active_status" disabled>
                             </td>
                             <td class="text-right">
-                                <span class="action_btn action_edit_btn" title="edit">&#9998;</span>
-                                <span class="action_btn action_delete_btn" title="delete">&#9746;</span>
-                                <span class="action_btn action_view_btn" title="view">&#9906;</span>
-                                
+                                <router-link class="action_btn action_edit_btn" 
+                                title="edit" :to="{ name: 'edit-session', params:{id:session.id} }">
+                                    &#9998;
+                                </router-link>
+                                <router-link class="action_btn action_view_btn" 
+                                title="view" :to="{ name: 'edit-session', params:{id:session.id} }">
+                                    &#9906;
+                                </router-link>
+                                <!-- <span class="action_btn action_view_btn" title="view">&#9906;</span> -->
+                                <span class="action_btn action_delete_btn" title="delete" 
+                                @click="deleteSession(session.id)">
+                                    &#9746;
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -68,6 +88,5 @@ import axios from 'axios'
 
         </div>
     </div>
-
 </div>    
 </template>

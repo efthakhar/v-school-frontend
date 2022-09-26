@@ -79,6 +79,7 @@ export default{
     box-shadow: 1px 1px 12px grey;
     padding:10px;
     border-radius: 10px;
+    padding-left: 20px;
 }
 
 .dashboard-sidebar-responsive{

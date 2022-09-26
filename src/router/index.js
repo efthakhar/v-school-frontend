@@ -37,11 +37,25 @@ const router = createRouter({
         path: '/dashboard',
         name: 'dashboard',
         component: () =>  import('../views/dashboard.vue'),
+
         children: [
+          // session
           {
+            name:'sessions',
             path: 'sessions',
             component: () =>  import('../views/academic/sessions.vue'),
           },
+          {
+            name:'add-session',
+            path: 'add-session',
+            component: () =>  import('../views/academic/add-session.vue'),
+          },
+          {
+            name:'edit-session',
+            path: 'edit-session/:id',
+            component: () =>  import('../views/academic/edit-session.vue'),
+          },
+          
           
         ],
     },
