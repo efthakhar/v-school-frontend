@@ -1,3 +1,4 @@
+import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthInfo } from '../stores/authinfo.js'
 
@@ -34,26 +35,45 @@ const router = createRouter({
     },
 
     {
+        // dashboard
         path: '/dashboard',
         name: 'dashboard',
-        component: () =>  import('../views/dashboard.vue'),
+        redirect: { name: 'overview' },
+        component: () =>  import('../views/dashboard/dashboard.vue'),
 
         children: [
+          // dashboard overview
+          {
+            name:'overview',
+            path: 'overview',
+            component: () =>  import('../views/dashboard/overview.vue'),
+            meta: { permissions:['dashboard']}
+          },
           // session
           {
             name:'sessions',
             path: 'sessions',
-            component: () =>  import('../views/academic/sessions.vue'),
+            component: () =>  import('../views/academic/session/sessions.vue'),
+            meta: { permissions:['session_view']}
+          
           },
           {
             name:'add-session',
-            path: 'add-session',
-            component: () =>  import('../views/academic/add-session.vue'),
+            path: 'sessions/add-session',
+            component: () =>  import('../views/academic/session/add-session.vue'),
+            meta: { permissions:['session_create']}
           },
           {
             name:'edit-session',
-            path: 'edit-session/:id',
-            component: () =>  import('../views/academic/edit-session.vue'),
+            path: 'sessions/edit-session/:id',
+            component: () =>  import('../views/academic/session/edit-session.vue'),
+            meta: { permissions:['session_update']}
+          },
+          {
+            name:'view-session',
+            path: 'sessions/view-session/:id',
+            component: () =>  import('../views/academic/session/view-session.vue'),
+            meta: { permissions:['session_view']}
           },
           
           
@@ -65,27 +85,48 @@ const router = createRouter({
 })
 
 
-
-
-
 /// Universal Auth middle ware
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to, from,next) => {
 
-    const authStatus = useAuthInfo()
-    //console.log(authStatus.getAuthUser.id)
+    let authInfo = useAuthInfo()
+    let required_permissions = to.meta.permissions || []
+    let user_permissions = authInfo.getPermissions
 
+    
     if( to.name =='login' || to.name == 'register' ) 
     {
-          if(JSON.parse(authStatus.getLog) === true)
+          if(JSON.parse(authInfo.getLog) === true)
           { 
-            return { name: 'dashboard' }
+            next({ name: 'dashboard' })
+          }else{
+            next()
           }
+
     }else{
-          if(JSON.parse(authStatus.getLog) == false)
+
+          if(JSON.parse(authInfo.getLog) == false)
           { 
-            console.log('not allowed')
-            return { name: 'login' }
+              console.log('not allowed')
+              next({ name: 'login' })
+
+          }else{
+           
+              let permittied = false
+              
+               required_permissions.forEach(permission => {
+
+                user_permissions.includes(permission)? permittied = true : false
+
+              });
+
+              if(permittied==true){
+                 next()
+              }else{
+                console.log('not_allowed')
+                next({ name: 'dashboard' })
+              }
           } 
+
     }
  
 

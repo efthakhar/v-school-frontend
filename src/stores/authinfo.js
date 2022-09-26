@@ -5,14 +5,18 @@ export const useAuthInfo = defineStore('authInfo', {
     state: () =>
      ({ 
         log: localStorage.getItem('auth') ,
-        user: localStorage.getItem('user')
+        user: localStorage.getItem('user'),
+        permissions:[
+         'session_create','session_view','session_update','session_delete',
+         'dashboard'
+      ]
      }),
 
     getters: {
 
       getLog: (state) => state.log,
-      getAuthUser:  (state) => JSON.parse(state.user) 
-
+      getAuthUser:  (state) => JSON.parse(state.user) ,
+      getPermissions: (state) => state.permissions
     },
 
     actions: {

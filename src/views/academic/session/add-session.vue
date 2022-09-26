@@ -19,8 +19,8 @@ export default{
         addSession(){
             axios.post(`${this.api_url}/api/sessions`, this.session_data)
                 .then((response) => {
-                    console.log(response)
-                    this.$router.push('sessions')
+                    // console.log(response)
+                    this.$router.push({name:'sessions'})
                 })
 
         }

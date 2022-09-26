@@ -31,12 +31,12 @@ export default{
 
              <div class="side-nav-sublinks" v-if="isOpened&&subnav">
 
-                <RouterLink v-for="sublink in navdetails.subnavlinks" :key="sublink"
-                 :class="this.$route.path==sublink.subnavlink?'active-nav-link':''"
-                 :to="sublink.subnavlink" class="side-nav-sublink">
-                 {{sublink.subnavtext}}
-                 </RouterLink>
-
+               <RouterLink v-for="sublink in navdetails.subnavlinks" :key="sublink" 
+               :class="this.$route.path.includes(sublink.subnavtext)?'active-nav-link':''"
+                :to="sublink.subnavlink" class="side-nav-sublink">
+                {{sublink.subnavtext}}
+                </RouterLink>
+             
              </div>
 </div>
 

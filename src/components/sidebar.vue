@@ -18,6 +18,10 @@ export default{
                 // },
 
                 {   
+                    navlinktext:'dashboard',
+                    navlink:'/dashboard/overview',
+                },
+                {   
                     navlinktext:'academic',
                     navlink:'/dashboard/academic',
                     subnavlinks:[

@@ -1,20 +1,25 @@
 <script>
-import axios from 'axios' 
+import axios from 'axios'
+import { useAuthInfo } from '@/stores/authinfo.js' 
+
  export default{
 
     data(){
         return{
-            sessions:[]
+
+            sessions:[],
+            userPermissions: useAuthInfo().getPermissions
         }
     },
+    
     methods:{
 
-
-        getSessions(){
-            axios.get(`${this.api_url}/api/sessions`)
+       async getSessions(){   
+          await  axios.get(`${this.api_url}/api/sessions`)
             .then((response) => {
                this.sessions = response.data
             })
+            //console.log(this.userPermissions)
         },
 
        async deleteSession(id){
@@ -66,19 +71,27 @@ import axios from 'axios'
                                 <input type="checkbox" :checked="session.active_status" disabled>
                             </td>
                             <td class="text-right">
+
                                 <router-link class="action_btn action_edit_btn" 
-                                title="edit" :to="{ name: 'edit-session', params:{id:session.id} }">
+                                title="edit" :to="{ name: 'edit-session', params:{id:session.id} }"
+                                v-if="userPermissions.includes('session_update')"
+                                >
                                     &#9998;
                                 </router-link>
+
                                 <router-link class="action_btn action_view_btn" 
-                                title="view" :to="{ name: 'edit-session', params:{id:session.id} }">
-                                    &#9906;
+                                title="view" :to="{ name: 'view-session', params:{id:session.id} }">
+                                    <!-- &#9906; -->
+                                     &#128065;
                                 </router-link>
+
                                 <!-- <span class="action_btn action_view_btn" title="view">&#9906;</span> -->
                                 <span class="action_btn action_delete_btn" title="delete" 
+                                v-if="userPermissions.includes('session_delete')"
                                 @click="deleteSession(session.id)">
                                     &#9746;
                                 </span>
+
                             </td>
                         </tr>
                     </tbody>

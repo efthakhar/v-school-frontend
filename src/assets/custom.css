@@ -37,10 +37,15 @@ input[type=checkbox] {
     cursor: pointer;
     transition: all .2s; 
 }
-.action_btn:hover{ transform: rotate(-10deg);}
+.action_btn:hover{ 
+    /* transform: rotate(-10deg); */
+}
 .action_edit_btn{color: green;}
 .action_delete_btn{color: red; }
-.action_view_btn{color: blue; transform: rotate(30deg);}
+.action_view_btn{
+    /* color: blue;  */
+    /* transform: rotate(30deg); */
+}
 .table {
     width: 100%;
     max-width: 100%;
