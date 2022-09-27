@@ -6,16 +6,29 @@ export default{
     data(){
         return{
             classes:[],
-            userPermissions: useAuthInfo().getPermissions
+            userPermissions: useAuthInfo().getPermissions,
+            current_page:1,
+            last_page:null,
+            pages:[]
+
         }
     },
     methods:{
 
-        async getClasses(){   
-        await  axios.get(`${this.api_url}/api/classes`)
+        async getClasses(current_page){  
+
+             await  axios.get(`${this.api_url}/api/classes?page=${current_page}`)
             .then((response) => {
-                this.classes = response.data
+                //console.log(response.data.data)
+                this.classes = response.data.data
+                this.pages= response.data.last_page
+                this.last_page = response.data.last_page
             })
+        },
+
+        change_page(page_no){
+            this.current_page = page_no
+            this.getClasses(this.current_page)
         },
 
         async deleteClass(id){
@@ -26,7 +39,7 @@ export default{
 
     },
     mounted(){
-        this.getClasses()
+        this.getClasses(this.current_page)
     }
 }    
 </script>
@@ -85,6 +98,29 @@ export default{
                 </div>
     
             </div>
+
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item" @click="change_page(current_page-1)" v-if="current_page!=1">
+                        <button class="page-link" >Prev </button>
+                    </li>  
+                    <li class="page-item" :class="current_page==page?'active':''"
+                    v-for="page in pages" :key="page" @click="change_page(page)">
+                        <button class="page-link" >
+                             {{page}}
+                        </button>
+                    </li>
+                    <li class="page-item" @click="change_page(current_page+1)" v-if="current_page!=last_page" >
+                        <button class="page-link" >Next </button>
+                    </li> 
+                </ul>
+            </nav>
+               
         </div>
     </div>    
 </template>
+
+<style>
+
+
+</style>
