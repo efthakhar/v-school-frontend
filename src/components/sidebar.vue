@@ -26,6 +26,7 @@ export default{
                     navlink:'/dashboard/academic',
                     subnavlinks:[
                         { subnavtext:'sessions', subnavlink:'/dashboard/sessions'},
+                        { subnavtext:'classes',  subnavlink:'/dashboard/classes' },
                     ]
                 },
                 

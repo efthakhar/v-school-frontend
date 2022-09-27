@@ -49,6 +49,9 @@ const router = createRouter({
             component: () =>  import('../views/dashboard/overview.vue'),
             meta: { permissions:['dashboard']}
           },
+
+
+
           // session
           {
             name:'sessions',
@@ -75,6 +78,36 @@ const router = createRouter({
             component: () =>  import('../views/academic/session/view-session.vue'),
             meta: { permissions:['session_view']}
           },
+
+          // class
+          {
+            name:'classes',
+            path: 'classes',
+            component: () =>  import('../views/academic/class/classes.vue'),
+            meta: { permissions:['class_view']}
+          },
+          {
+            name:'add-class',
+            path: 'classes/add-class',
+            component: () =>  import('../views/academic/class/add-class.vue'),
+            meta: { permissions:['class_create']}
+          },
+          {
+            name:'edit-class',
+            path: 'classes/edit-class/:id',
+            component: () =>  import('../views/academic/class/edit-class.vue'),
+            meta: { permissions:['class_create']}
+          },
+          {
+            name:'view-class',
+            path: 'classes/view-class/:id',
+            component: () =>  import('../views/academic/class/view-class.vue'),
+            meta: { permissions:['class_view']}
+          },
+
+
+
+
           
           
         ],

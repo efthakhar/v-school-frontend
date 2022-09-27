@@ -8,6 +8,7 @@ export const useAuthInfo = defineStore('authInfo', {
         user: localStorage.getItem('user'),
         permissions:[
          'session_create','session_view','session_update','session_delete',
+         'class_create','class_view','class_update','class_delete',
          'dashboard'
       ]
      }),

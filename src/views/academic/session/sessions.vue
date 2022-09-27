@@ -19,7 +19,6 @@ import { useAuthInfo } from '@/stores/authinfo.js'
             .then((response) => {
                this.sessions = response.data
             })
-            //console.log(this.userPermissions)
         },
 
        async deleteSession(id){
