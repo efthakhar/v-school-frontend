@@ -79,3 +79,22 @@ input[type=checkbox] {
     
 
 
+/* side component  */
+
+.side_component_container .side_component{
+    z-index: 500;
+    position: absolute;
+    width: 500px;
+    height: 100vh;
+    top:0; right: 0;
+    background-color: rgb(255, 255, 255);
+    border-left: 3px solid #0d6efd;
+    box-shadow: 1px 1px 40px gray;
+    padding: 20px;
+    overflow-y: auto;
+}
+@media (max-width:500px){
+    .side_component_container .side_component{
+        width: 100vw;
+    }  
+}

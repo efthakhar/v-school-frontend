@@ -9,7 +9,7 @@
 
 
 <template>
-<nav aria-label="..."> 
+<nav aria-label="..." v-if="total_pages>0"> 
     <ul class="pagination">
     
             <!-- prev nav -->
@@ -65,10 +65,3 @@
 <style>
 li.disabled.page-item{cursor:not-allowed !important;}
 </style>
-
-    <!-- <li class="page-item" :class="current_page==page?'active':''"
-    v-for="page in total_pages" :key="page" @click="$emit('pageChange',page)">
-        <button class="page-link" >
-                {{page}}
-        </button>
-    </li> -->

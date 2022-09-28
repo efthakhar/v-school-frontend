@@ -105,6 +105,14 @@ const router = createRouter({
             meta: { permissions:['class_view']}
           },
 
+          // building
+          {
+            name:'buildings',
+            path: 'buildings',
+            component: () =>  import('../views/academic/building/buildings.vue'),
+            meta: { permissions:['building_view']}
+          },
+
 
 
 

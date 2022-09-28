@@ -9,6 +9,7 @@ export const useAuthInfo = defineStore('authInfo', {
         permissions:[
          'session_create','session_view','session_update','session_delete',
          'class_create','class_view','class_update','class_delete',
+         'building_create','building_view','building_update','building_delete',
          'dashboard'
         ]
 

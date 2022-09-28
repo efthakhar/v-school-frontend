@@ -27,6 +27,7 @@ export default{
                     subnavlinks:[
                         { subnavtext:'sessions', subnavlink:'/dashboard/sessions'},
                         { subnavtext:'classes',  subnavlink:'/dashboard/classes' },
+                        { subnavtext:'buildings',  subnavlink:'/dashboard/buildings' },
                     ]
                 },
                 

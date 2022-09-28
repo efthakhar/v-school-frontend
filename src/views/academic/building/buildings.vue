@@ -5,68 +5,68 @@ import { useAuthInfo } from '@/stores/authinfo.js'
 import loader from '../../../components/loader.vue'
 import pagination from '../../../components/pagination.vue'
 
+import addBuilding from '../../../components/academic/building/add-building.vue'
+
+
 export default{
-    components: {loader,pagination },
+    components:{ loader, pagination, addBuilding},
     data(){
         return{
             loading:false,
-            classes:[],
-            userPermissions: useAuthInfo().getPermissions,
-
             current_page:1,
             total_pages:0,
+
+            userPermissions: useAuthInfo().getPermissions,
+            buildings:[],
+
+            addBuildingSidebar : false,
+            editBuildingSidebar: false,
+            viewBuildingSidebar: false
+
         }
     },
     methods:{
-
-        async getClasses(current_page){  
+       async getBuildings(current_page){
 
              this.loading = true
-
-             await  axios.get(`${this.api_url}/api/classes?page=${current_page}`)
-
+             await  axios.get(`${this.api_url}/api/buildings?page=${current_page}`)
             .then((response) => {
-                this.classes = response.data.data
+                this.buildings = response.data.data
                 this.total_pages= Math.ceil(response.data.total/response.data.per_page)
-               // alert(this.total_pages)
                 this.loading = false
             })
         },
-
-        change_page(page_no){
+       async change_page(page_no){
             this.current_page = page_no
-            this.getClasses(this.current_page)
+            this.getBuildings(this.current_page)
         },
-
-        async deleteClass(id){
-            await axios.delete(`${this.api_url}/api/classes/${id}`)
+        async deleteBuilding(id){
+            await axios.delete(`${this.api_url}/api/buildings/${id}`)
             .then((response) => {
                 
-                if(this.classes.length==1){
+                if(this.buildings.length==1){
                     this.current_page -=1
-                    this.getClasses(this.current_page)
+                    this.getBuildings(this.current_page)
                 }else{
-                    this.getClasses(this.current_page)
+                    this.getBuildings(this.current_page)
                 }
             })
             
             
         }
-
     },
     mounted(){
-        this.getClasses(this.current_page)
+        this.getBuildings(this.current_page)
     }
-}    
+}
 </script>
-
 <template>
     <div class="page-view">
         <div class="page-top-nav">
-            <h4 class="blue-txt">Classes</h4>
-            <router-link :to="{ name: 'add-class' }" class="btn btn-primary btn-sm ms-auto" > 
-                add class 
-            </router-link>
+            <h4 class="blue-txt">Academic Buildings</h4>
+            <a @click="this.addBuildingSidebar = true" class="btn btn-primary btn-sm ms-auto" > 
+                add building
+            </a>
         </div>
         <loader v-if='loading'></loader>
         <div class="page-main-content">
@@ -77,32 +77,32 @@ export default{
                     <table class="table">
                         <thead>
                             <tr>
-                                <th class="text-right">class name</th>
-                                <th class="text-right">session name</th>
+                                <th class="text-right">name</th>
+                                <th class="text-right">location</th>
                                 <th class="text-right">action</th>
                             </tr>
                         </thead>             
                         <tbody>
-                            <tr v-for="class_item in classes" :key="class_item.id">
-                                <td class="text-right">{{class_item.class_name}}</td>
-                                <td class="text-right">{{class_item.session_name}}</td>
+                            <tr v-for="building in buildings" :key="building.id">
+                                <td class="text-right">{{building.building_name}}</td>
+                                <td class="text-right">{{building.building_location}}</td>
                                 <td class="text-right">
     
                                     <router-link class="action_btn action_edit_btn" 
-                                    title="edit" :to="{ name: 'edit-class', params:{id: class_item.id} }"
+                                    title="edit" :to="{ name: 'edit-class', params:{id: building.id} }"
                                     v-if="userPermissions.includes('class_update')"
                                     >
                                         &#9998;
                                     </router-link>
     
                                     <router-link class="action_btn action_view_btn" 
-                                    title="view" :to="{ name: 'view-class', params:{id:class_item.id} }">
+                                    title="view" :to="{ name: 'view-class', params:{id:building.id} }">
                                          &#128065;
                                     </router-link>
     
                                     <span class="action_btn action_delete_btn" title="delete" 
                                     v-if="userPermissions.includes('class_delete')"
-                                    @click="deleteClass(class_item.id)">
+                                    @click="deleteBuilding(building.id)">
                                         &#9746;
                                     </span>
     
@@ -119,7 +119,14 @@ export default{
                 </div>
             </div>     
         </div>
-    </div>    
+        <div class="side_component_container">
+            
+            <addBuilding  @refreshData='getBuildings' v-if="addBuildingSidebar"
+             @close="addBuildingSidebar=false"
+            />
+        </div>
+    </div>
+
 </template>
 
 <style>
