@@ -39,6 +39,7 @@ export default{
     mounted(){
         this.getSessions();
         this.getClass(this.$route.params.id);
+        //console.log(this.$router.options.history.state.back)
     }
 }
        

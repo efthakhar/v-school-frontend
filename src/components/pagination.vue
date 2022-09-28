@@ -9,7 +9,7 @@
 
 
 <template>
-<nav aria-label="..."> total:{{this.total_pages}} current:{{this.current_page}}
+<nav aria-label="..."> 
     <ul class="pagination">
     
             <!-- prev nav -->
