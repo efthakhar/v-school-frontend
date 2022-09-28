@@ -3,29 +3,33 @@ import axios from 'axios'
 import { useAuthInfo } from '@/stores/authinfo.js' 
 
 import loader from '../../../components/loader.vue'
+import pagination from '../../../components/pagination.vue'
 
 export default{
-    components: {loader},
+    components: {loader,pagination },
     data(){
         return{
+            loading:true,
             classes:[],
             userPermissions: useAuthInfo().getPermissions,
+
             current_page:1,
-            last_page:null,
-            pages:[],
-            loading:true
+            total_pages:0,
         }
     },
     methods:{
 
         async getClasses(current_page){  
-            this.loading = true
+
+             this.loading = true
+
              await  axios.get(`${this.api_url}/api/classes?page=${current_page}`)
+
             .then((response) => {
-                //console.log(response.data.data)
+
+               // console.log(response.data)
                 this.classes = response.data.data
-                this.pages= response.data.last_page
-                this.last_page = response.data.last_page
+                this.total_pages= Math.ceil(response.data.total/response.data.per_page)
                 this.loading = false
             })
         },
@@ -60,6 +64,7 @@ export default{
         <div class="page-main-content">
             <div class="table_container">
                 <div class="col-lg-8 col-md-10 ml-auto mr-auto" v-if="loading==false">
+
                     <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -68,8 +73,7 @@ export default{
                                 <th class="text-right">session name</th>
                                 <th class="text-right">action</th>
                             </tr>
-                        </thead>
-                       
+                        </thead>             
                         <tbody>
                             <tr v-for="class_item in classes" :key="class_item.id">
                                 <td class="text-right">{{class_item.class_name}}</td>
@@ -99,27 +103,13 @@ export default{
                         </tbody>
                     </table>
                     </div> 
-                </div>
-    
-            </div>
 
-            <nav aria-label="...">
-                <ul class="pagination">
-                    <li class="page-item" @click="change_page(current_page-1)" v-if="current_page!=1">
-                        <button class="page-link" >Prev </button>
-                    </li>  
-                    <li class="page-item" :class="current_page==page?'active':''"
-                    v-for="page in pages" :key="page" @click="change_page(page)">
-                        <button class="page-link" >
-                             {{page}}
-                        </button>
-                    </li>
-                    <li class="page-item" @click="change_page(current_page+1)" v-if="current_page!=last_page" >
-                        <button class="page-link" >Next </button>
-                    </li> 
-                </ul>
-            </nav>
-               
+                    <pagination  :total_pages='total_pages' 
+                     @pageChange='change_page' :current_page="current_page"
+                     />
+
+                </div>
+            </div>     
         </div>
     </div>    
 </template>
