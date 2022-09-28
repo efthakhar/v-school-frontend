@@ -1,23 +1,26 @@
 <script>
 import axios from 'axios'
 import { useAuthInfo } from '@/stores/authinfo.js' 
-
+import loader from '../../../components/loader.vue'
  export default{
-
+    components: {loader},
     data(){
         return{
 
             sessions:[],
-            userPermissions: useAuthInfo().getPermissions
+            userPermissions: useAuthInfo().getPermissions,
+            loading: false
         }
     },
     
     methods:{
 
-       async getSessions(){   
+       async getSessions(){ 
+          this.loading = true  
           await  axios.get(`${this.api_url}/api/sessions`)
             .then((response) => {
                this.sessions = response.data
+               this.loading = false
             })
         },
 
@@ -45,10 +48,11 @@ import { useAuthInfo } from '@/stores/authinfo.js'
     </div>
     <div class="page-main-content">
          
-        <div class="table_container">
-
-            <div class="col-lg-8 col-md-10 ml-auto mr-auto">
-                <div class="table-responsive">
+        <div class="table_container" >
+            
+            <div class="col-lg-8 col-md-10 ml-auto mr-auto" >
+                <loader v-if="loading"/>
+                <div class="table-responsive" v-if="loading==false">
                 <table class="table">
                     <thead>
                         <tr>

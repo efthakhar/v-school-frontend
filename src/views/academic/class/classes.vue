@@ -2,27 +2,31 @@
 import axios from 'axios'
 import { useAuthInfo } from '@/stores/authinfo.js' 
 
+import loader from '../../../components/loader.vue'
+
 export default{
+    components: {loader},
     data(){
         return{
             classes:[],
             userPermissions: useAuthInfo().getPermissions,
             current_page:1,
             last_page:null,
-            pages:[]
-
+            pages:[],
+            loading:true
         }
     },
     methods:{
 
         async getClasses(current_page){  
-
+            this.loading = true
              await  axios.get(`${this.api_url}/api/classes?page=${current_page}`)
             .then((response) => {
                 //console.log(response.data.data)
                 this.classes = response.data.data
                 this.pages= response.data.last_page
                 this.last_page = response.data.last_page
+                this.loading = false
             })
         },
 
@@ -52,11 +56,10 @@ export default{
                 add class 
             </router-link>
         </div>
+        <loader v-if='loading'></loader>
         <div class="page-main-content">
-             
             <div class="table_container">
-    
-                <div class="col-lg-8 col-md-10 ml-auto mr-auto">
+                <div class="col-lg-8 col-md-10 ml-auto mr-auto" v-if="loading==false">
                     <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -66,6 +69,7 @@ export default{
                                 <th class="text-right">action</th>
                             </tr>
                         </thead>
+                       
                         <tbody>
                             <tr v-for="class_item in classes" :key="class_item.id">
                                 <td class="text-right">{{class_item.class_name}}</td>
