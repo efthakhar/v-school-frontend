@@ -7,7 +7,7 @@ export default{
     data(){
         return{
              sidebar_status: sidebarStatus(),
-             authStore: useAuthInfo()
+             authInfo: useAuthInfo()
         }
     },
     methods:{
@@ -16,7 +16,7 @@ export default{
         },
         async logout(){
             await axios.get('http://127.0.0.1:8000/logout')
-            this.authStore.logout()
+            this.authInfo.logout()
             this.$router.push('login')
        },
     },
@@ -47,7 +47,9 @@ export default{
     </div>   
     
     <div class="ms-auto user_info">
-        <p class="m-2">hi, {{authStore.getAuthUser.name}} </p>
+        <p class="m-2">hi, 
+            {{authInfo.getAuthUser.name}} 
+        </p>
         <a @click="logout" class="btn btn-primary">logout</a>
     </div>    
 </div> 

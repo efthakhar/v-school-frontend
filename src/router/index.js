@@ -120,49 +120,105 @@ const router = createRouter({
 
 /// Universal Auth middle ware
 router.beforeEach(async (to, from,next) => {
-
-    let authInfo = useAuthInfo()
-    let required_permissions = to.meta.permissions || []
-    let user_permissions = authInfo.getPermissions
-
     
-    if( to.name =='login' || to.name == 'register' ) 
-    {
-          if(JSON.parse(authInfo.getLog) === true)
-          { 
-            next({ name: 'dashboard' })
-          }else{
-            next()
-          }
+  let authInfo = useAuthInfo()
+  let user = JSON.parse(localStorage.getItem('user'))
 
-    }else{
+ // console.log(user)
+  
+  if( to.name =='login' || to.name == 'register') 
+  {
+        
+        if(user)
+        { 
+          next({ name: 'dashboard' })
+        }else{
+          next()
+        }
 
-          if(JSON.parse(authInfo.getLog) == false)
-          { 
-              console.log('not allowed')
-              next({ name: 'login' })
+  }else{
 
-          }else{
-           
-              let permittied = false
-              
-               required_permissions.forEach(permission => {
+       
+        if(!user)
+        {   
+            console.log('not allowed')
+            next({ name: 'login' })
 
-                user_permissions.includes(permission)? permittied = true : false
+        }else{
+          let required_permissions = to.meta.permissions || []
+          let user_permissions = authInfo.getPermissions
+         
+            let permittied = false
+            
+             required_permissions.forEach(permission => {
 
-              });
+              user_permissions.includes(permission)? permittied = true : false
 
-              if(permittied==true){
-                 next()
-              }else{
-                console.log('not_allowed')
-                next({ name: 'dashboard' })
-              }
-          } 
+            });
 
-    }
- 
+            if(permittied==true){
+               next()
+            }else{
+              console.log('not_allowed')
+              next({ name: 'dashboard' })
+            }
+        } 
+
+  }
+
 
 })
+
+
+
+// /// Universal Auth middle ware
+// router.beforeEach(async (to, from,next) => {
+    
+//     let authInfo = useAuthInfo()
+//     let logstatus =authInfo.getLog
+//     console.log(logstatus)
+    
+//     if( to.name =='login' || to.name == 'register') 
+//     {
+//           //if(JSON.parse(authInfo.getLog) === true)
+//           if(logstatus == true)
+//           { 
+//             next({ name: 'dashboard' })
+//           }else{
+//             next()
+//           }
+
+//     }else{
+
+//           //if(JSON.parse(authInfo.getLog) === false)
+//           if(logstatus != true)
+//           {   console.log(logstatus+'sf')
+//               console.log('not allowed')
+//               next({ name: 'login' })
+
+//           }else{
+//             let required_permissions = to.meta.permissions || []
+//             let user_permissions = authInfo.getPermissions
+           
+//               let permittied = false
+              
+//                required_permissions.forEach(permission => {
+
+//                 user_permissions.includes(permission)? permittied = true : false
+
+//               });
+
+//               if(permittied==true){
+//                  next()
+//               }else{
+//                 console.log('not_allowed')
+//                 next({ name: 'dashboard' })
+//               }
+//           } 
+
+//     }
+ 
+
+// })
 
 export default router

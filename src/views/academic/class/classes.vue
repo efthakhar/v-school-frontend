@@ -26,10 +26,9 @@ export default{
              await  axios.get(`${this.api_url}/api/classes?page=${current_page}`)
 
             .then((response) => {
-
-               // console.log(response.data)
                 this.classes = response.data.data
                 this.total_pages= Math.ceil(response.data.total/response.data.per_page)
+               // alert(this.total_pages)
                 this.loading = false
             })
         },
@@ -41,8 +40,17 @@ export default{
 
         async deleteClass(id){
             await axios.delete(`${this.api_url}/api/classes/${id}`)
-            .then((response) => console.log(response.data))
-            this.getClasses()
+            .then((response) => {
+                
+                if(this.classes.length==1){
+                    this.current_page -=1
+                    this.getClasses(this.current_page)
+                }else{
+                    this.getClasses(this.current_page)
+                }
+            })
+            
+            
         }
 
     },
