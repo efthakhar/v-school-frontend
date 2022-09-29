@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { useAuthInfo } from './stores/authinfo'
 
 
 
@@ -11,6 +12,25 @@ import router from './router'
 import './assets/main.css'
 
 axios.defaults.withCredentials = true
+
+
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+    return response;
+  }, 
+  function (error) {
+   
+    if (error.response && error.response.status === 401)
+     {
+         console.log('unauthorized request')
+         useAuthInfo().logout()
+    }
+    return Promise.reject(error);
+  })
+
+
+
 
 const app = createApp(App)
 

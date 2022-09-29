@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+
+
 export const useAuthInfo = defineStore('authInfo', {
 
     state: () =>
@@ -23,7 +25,7 @@ export const useAuthInfo = defineStore('authInfo', {
     actions: {
      
      logout(){
-        
+      
         localStorage.setItem('user', null)
         window.location.reload(true)
         

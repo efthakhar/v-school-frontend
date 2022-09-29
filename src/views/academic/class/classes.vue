@@ -19,7 +19,8 @@ export default{
     },
     methods:{
 
-        async getClasses(current_page){  
+        async getClasses(current_page){
+            
 
              this.loading = true
 

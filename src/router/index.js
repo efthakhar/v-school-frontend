@@ -1,6 +1,7 @@
 import { nextTick } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthInfo } from '../stores/authinfo.js'
+import axios from 'axios'
 
 const router = createRouter({
 
@@ -126,17 +127,17 @@ const router = createRouter({
 })
 
 
+
+
+
 /// Universal Auth middle ware
 router.beforeEach(async (to, from,next) => {
     
   let authInfo = useAuthInfo()
   let user = JSON.parse(localStorage.getItem('user'))
-
- // console.log(user)
   
   if( to.name =='login' || to.name == 'register') 
-  {
-        
+  {      
         if(user)
         { 
           next({ name: 'dashboard' })
