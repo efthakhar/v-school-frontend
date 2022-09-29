@@ -6,18 +6,23 @@ import loader from '../../../components/loader.vue'
 import pagination from '../../../components/pagination.vue'
 
 import addBuilding from '../../../components/academic/building/add-building.vue'
+import editBuilding from '../../../components/academic/building/edit-building.vue'
+import viewBuilding from '../../../components/academic/building/view-building.vue'
 
 
 export default{
-    components:{ loader, pagination, addBuilding},
+    components:{ loader, pagination, addBuilding,editBuilding, viewBuilding},
     data(){
         return{
             loading:false,
+
             current_page:1,
             total_pages:0,
 
             userPermissions: useAuthInfo().getPermissions,
             buildings:[],
+            edit_building_id: null,
+            view_building_id: null,
 
             addBuildingSidebar : false,
             editBuildingSidebar: false,
@@ -26,16 +31,17 @@ export default{
         }
     },
     methods:{
-       async getBuildings(current_page){
-
+       async getBuildings(page){
+             this.current_page = page
              this.loading = true
-             await  axios.get(`${this.api_url}/api/buildings?page=${current_page}`)
+             await  axios.get(`${this.api_url}/api/buildings?page=${page}`)
             .then((response) => {
                 this.buildings = response.data.data
                 this.total_pages= Math.ceil(response.data.total/response.data.per_page)
                 this.loading = false
             })
         },
+
        async change_page(page_no){
             this.current_page = page_no
             this.getBuildings(this.current_page)
@@ -53,6 +59,14 @@ export default{
             })
             
             
+        },
+        openEditSidebar(id){
+            this.editBuildingSidebar = true
+            this.edit_building_id = id
+        },
+        openViewSidebar(id){
+            this.viewBuildingSidebar = true
+            this.view_building_id = id
         }
     },
     mounted(){
@@ -88,17 +102,19 @@ export default{
                                 <td class="text-right">{{building.building_location}}</td>
                                 <td class="text-right">
     
-                                    <router-link class="action_btn action_edit_btn" 
-                                    title="edit" :to="{ name: 'edit-class', params:{id: building.id} }"
-                                    v-if="userPermissions.includes('class_update')"
+                                    <a class="action_btn action_edit_btn" 
+                                    title="edit" @click='openEditSidebar(building.id)'
+                                    v-if="userPermissions.includes('building_update')"
                                     >
                                         &#9998;
-                                    </router-link>
+                                    </a>
     
-                                    <router-link class="action_btn action_view_btn" 
-                                    title="view" :to="{ name: 'view-class', params:{id:building.id} }">
+                                    <a class="action_btn action_view_btn" 
+                                    title="view" @click='openViewSidebar(building.id)'
+                                    v-if="userPermissions.includes('building_view')"
+                                    >
                                          &#128065;
-                                    </router-link>
+                                    </a>
     
                                     <span class="action_btn action_delete_btn" title="delete" 
                                     v-if="userPermissions.includes('class_delete')"
@@ -121,8 +137,17 @@ export default{
         </div>
         <div class="side_component_container">
             
-            <addBuilding  @refreshData='getBuildings' v-if="addBuildingSidebar"
-             @close="addBuildingSidebar=false"
+            <addBuilding 
+                @refreshData='getBuildings(1)' v-if="addBuildingSidebar"
+                @close="addBuildingSidebar=false"
+            />
+            <editBuilding 
+                @refreshData='getBuildings(current_page)' v-if="editBuildingSidebar" :buiding_id="edit_building_id"
+                @close="editBuildingSidebar=false" 
+            />
+            <viewBuilding 
+                v-if="viewBuildingSidebar" :buiding_id="view_building_id"
+                @close="viewBuildingSidebar=false" 
             />
         </div>
     </div>

@@ -18,25 +18,21 @@ export const useAuthInfo = defineStore('authInfo', {
      }),
 
     getters: {
-      getAuthUser:  (state) => state.user ,
-      getPermissions: (state) => state.permissions
+        getAuthUser:  (state) => state.user ,
+        getPermissions: (state) => state.permissions
     },
 
     actions: {
      
-     logout(){
-      
-        localStorage.setItem('user', null)
-        window.location.reload(true)
-        
-      },
+      logout(){
+          localStorage.setItem('user', null)
+          window.location.reload(true) 
+        },
 
-     login(user){ 
-
-         localStorage.setItem('user',JSON.stringify(user) )
-         window.location.reload(true)
-         
-     }
+      login(user){ 
+          localStorage.setItem('user',JSON.stringify(user) )
+          window.location.reload(true)     
+      }
 
     },
 })

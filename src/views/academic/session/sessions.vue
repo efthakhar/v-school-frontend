@@ -22,12 +22,6 @@ import loader from '../../../components/loader.vue'
                this.sessions = response.data
                this.loading = false
             })
-            // .catch(error=>{
-            //     if (error.response && error.response.status === 401) {
-            //     window.location.href = "login";
-                
-            //    }   
-            // })
         },
 
        async deleteSession(id){
