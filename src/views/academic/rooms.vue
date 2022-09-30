@@ -65,8 +65,8 @@
                 this.edit_room_id = id
             },
             openViewSidebar(id){
-                this.viewRoomSidebar = true
                 this.view_room_id = id
+                this.viewRoomSidebar = true
             }
         },
         mounted(){
@@ -140,15 +140,17 @@
             <div class="side_component_container">
                 
                 <addRoom
-                    @refreshData='getRooms(1)' v-if="addRoomSidebar"
+                    @refreshData='getRooms(1)' 
+                    v-if="addRoomSidebar"
                     @close="addRoomSidebar=false"
                 />
                 <editRoom
-                    @refreshData='getRooms(current_page)' v-if="editRoomSidebar" :room_id="edit_room_id"
+                    @refreshData='getRooms(current_page)' 
+                    v-if="editRoomSidebar" :room_id="edit_room_id"
                     @close="editRoomSidebar=false" 
                 />
                 <viewRoom 
-                    v-if="viewRoomSidebar" :room_id="edit_room_id"
+                    v-if="viewRoomSidebar" :room_id="view_room_id"
                     @close="viewRoomSidebar=false" 
                 />
             </div>

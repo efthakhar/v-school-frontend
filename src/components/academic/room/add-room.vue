@@ -32,8 +32,8 @@ export default{
                     this.$emit('refreshData',1)               
                 })
                 .catch((error) =>
-                {
-                    this.room_no_error =  error.response.data.errors.room_name
+                {   console.log(error.response.data)
+                    this.room_no_error =  error.response.data.errors.room_no
                     this.building_name_error =  error.response.data.errors.building_name
                 })
         },
