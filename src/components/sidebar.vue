@@ -6,28 +6,35 @@ export default{
     data(){
         return{
             navlinks:[
-                // {   
-                //     navlinktext:'HOME',
-                //     navlink:'/home',
-                //     subnavlinks:[
-                //         { subnavtext:'home', subnavlink:'/home'},
-                //         { subnavtext:'home2', subnavlink:'/home2'},
-                //         { subnavtext:'home3', subnavlink:'/home3'},
-                //     ]
-
-                // },
-
+                
                 {   
                     navlinktext:'dashboard',
                     navlink:'/dashboard/overview',
+                    permission:'dashboard'
                 },
+
                 {   
                     navlinktext:'academic',
-                    navlink:'/dashboard/academic',
+                    // navlink:'/dashboard/academic',
                     subnavlinks:[
-                        { subnavtext:'sessions', subnavlink:'/dashboard/sessions'},
-                        { subnavtext:'classes',  subnavlink:'/dashboard/classes' },
-                        { subnavtext:'buildings',  subnavlink:'/dashboard/buildings' },
+                        { 
+                           subnavtext:'sessions',
+                           subnavlink:'/dashboard/sessions',
+                           permission:'session_view'
+                        },
+                        {
+                           subnavtext:'classes',  
+                           subnavlink:'/dashboard/classes',
+                           permission:'class_view'
+                        },
+                        {  subnavtext:'buildings',  
+                           subnavlink:'/dashboard/buildings',
+                           permission:'building_view'
+                        },
+                        {  subnavtext:'rooms',  
+                           subnavlink:'/dashboard/rooms',
+                           permission:'room_view'
+                        },
                     ]
                 },
                 
@@ -42,7 +49,7 @@ export default{
 <template>
 <div>
     <div class="sidebar-logo">
-        <a href="">RobustErp</a>
+        <a href="">V-SchooL</a>
     </div>
     <ul class="sidebar-nav-items">  
         <SideNavItem v-for="navlink in navlinks" :key="navlink"

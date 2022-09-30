@@ -51,8 +51,6 @@ const router = createRouter({
             meta: { permissions:['dashboard']}
           },
 
-
-
           // session
           {
             name:'sessions',
@@ -110,8 +108,15 @@ const router = createRouter({
           {
             name:'buildings',
             path: 'buildings',
-            component: () =>  import('../views/academic/building/buildings.vue'),
+            component: () =>  import('../views/academic/buildings.vue'),
             meta: { permissions:['building_view']}
+          },
+          // room
+          {
+            name:'rooms',
+            path: 'rooms',
+            component: () =>  import('../views/academic/rooms.vue'),
+            meta: { permissions:['room_view']}
           },
 
 
@@ -179,55 +184,5 @@ router.beforeEach(async (to, from,next) => {
 })
 
 
-
-// /// Universal Auth middle ware
-// router.beforeEach(async (to, from,next) => {
-    
-//     let authInfo = useAuthInfo()
-//     let logstatus =authInfo.getLog
-//     console.log(logstatus)
-    
-//     if( to.name =='login' || to.name == 'register') 
-//     {
-//           //if(JSON.parse(authInfo.getLog) === true)
-//           if(logstatus == true)
-//           { 
-//             next({ name: 'dashboard' })
-//           }else{
-//             next()
-//           }
-
-//     }else{
-
-//           //if(JSON.parse(authInfo.getLog) === false)
-//           if(logstatus != true)
-//           {   console.log(logstatus+'sf')
-//               console.log('not allowed')
-//               next({ name: 'login' })
-
-//           }else{
-//             let required_permissions = to.meta.permissions || []
-//             let user_permissions = authInfo.getPermissions
-           
-//               let permittied = false
-              
-//                required_permissions.forEach(permission => {
-
-//                 user_permissions.includes(permission)? permittied = true : false
-
-//               });
-
-//               if(permittied==true){
-//                  next()
-//               }else{
-//                 console.log('not_allowed')
-//                 next({ name: 'dashboard' })
-//               }
-//           } 
-
-//     }
- 
-
-// })
 
 export default router

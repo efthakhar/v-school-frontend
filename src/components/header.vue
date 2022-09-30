@@ -48,7 +48,7 @@ export default{
     
     <div class="ms-auto user_info">
         <p class="m-2">hi, 
-            {{authInfo.getAuthUser.name}} 
+            {{authInfo.getAuthUser!==null?authInfo.getAuthUser.name:''}} 
         </p>
         <a @click="logout" class="btn btn-primary">logout</a>
     </div>    

@@ -18,19 +18,19 @@ export default{
 
        async login(){
 
-              await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie')
+              await axios.get(`${this.api_url}/sanctum/csrf-cookie`)
 
-             await axios.post('http://127.0.0.1:8000/login', {
+             await axios.post(`${this.api_url}/login`, {
                     email:this.email,
                     password:this.password
                 })
                 .then((response) => {
-                    //console.log(response.data.user);
+                   
                     this.authStore.login(response.data.user)
                     this.$router.push('dashboard')
 
                 }, (error) => {
-                    // console.log(error);
+                    
                     this.authStore.logout()
                     
                 });

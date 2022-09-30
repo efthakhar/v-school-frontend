@@ -2,12 +2,12 @@
 import axios from 'axios'
 import { useAuthInfo } from '@/stores/authinfo.js' 
 
-import loader from '../../../components/loader.vue'
-import pagination from '../../../components/pagination.vue'
+import loader from '../../components/loader.vue'
+import pagination from '../../components/pagination.vue'
 
-import addBuilding from '../../../components/academic/building/add-building.vue'
-import editBuilding from '../../../components/academic/building/edit-building.vue'
-import viewBuilding from '../../../components/academic/building/view-building.vue'
+import addBuilding from '../../components/academic/building/add-building.vue'
+import editBuilding from '../../components/academic/building/edit-building.vue'
+import viewBuilding from '../../components/academic/building/view-building.vue'
 
 
 export default{
@@ -117,7 +117,7 @@ export default{
                                     </a>
     
                                     <span class="action_btn action_delete_btn" title="delete" 
-                                    v-if="userPermissions.includes('class_delete')"
+                                    v-if="userPermissions.includes('building_delete')"
                                     @click="deleteBuilding(building.id)">
                                         &#9746;
                                     </span>

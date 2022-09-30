@@ -58,6 +58,7 @@ export default{
                     <p class="error_txt" v-if="class_name_error">{{class_name_error}}</p>
                     <input type="text" class="form-control" v-model="class_data.class_name">
                 </div>
+                
                 <div class="form_item col-md-5">
                     <label class="my-2">session</label>
                     <p class="error_txt" v-if="session_name_error">{{session_name_error}}</p>

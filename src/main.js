@@ -23,8 +23,12 @@ axios.interceptors.response.use(function (response) {
    
     if (error.response && error.response.status === 401)
      {
-         console.log('unauthorized request')
-         useAuthInfo().logout()
+         console.log(error.response.data.message)
+         if(error.response.data.message==='Unauthenticated.')
+         {
+          useAuthInfo().logout()
+         } 
+
     }
     return Promise.reject(error);
   })

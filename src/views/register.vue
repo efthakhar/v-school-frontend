@@ -16,9 +16,9 @@ export default{
 
         async register(){
 
-            await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie')
+            await axios.get(`${this.api_url}/sanctum/csrf-cookie`)
 
-            await  axios.post('http://127.0.0.1:8000/register', {
+            await  axios.post(`${this.api_url}/register`, {
 
                         name: this.name,
                         email: this.email,
@@ -42,7 +42,7 @@ export default{
            
         },
         async logout(){
-            axios.get('http://127.0.0.1:8000/logout')
+            axios.get(`${this.api_url}/logout`)
             this.authStore.logout()
             this.$router.push('login')
         },
