@@ -33,8 +33,8 @@ export default{
                 })
                 .catch((error) =>
                 {   console.log(error.response.data)
-                    this.room_no_error =  error.response.data.errors.room_no
-                    this.building_name_error =  error.response.data.errors.building_name
+                    this.room_no_error =  error.response.data.errors.room_no 
+                    this.building_name_error =  error.response.data.errors.building_id
                 })
         },
         
@@ -59,7 +59,6 @@ export default{
 
     <div class="form_item ">
         <label class="my-2">room name <span class="required">*</span></label>
-        <p class="error_txt" v-if="room_no_error">room name duplicated</p>
         <input type="text" class="form-control mb-2" v-model="room_data.room_name">
     </div>
 
