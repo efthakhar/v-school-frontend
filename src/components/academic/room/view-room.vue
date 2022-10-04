@@ -1,9 +1,16 @@
 <script>
-    import loader from '../../loader.vue'
-    import axios from 'axios'    
-    export default{
+import loader from '../../shared/loader.vue'
+import axios from 'axios'    
+import { useRoomStore } from '../../../stores/academic/roomStore'
+import { mapStores } from 'pinia'
+
+export default{
+        
         props:['room_id'],
         components:{loader},
+        computed:{
+            ...mapStores(useRoomStore)
+        },
         data(){
             return{
                 loading:false,
@@ -22,9 +29,9 @@
         },
         methods:{
     
-             async getRoom(id){
+                async getRoom(id){
                
-                await  axios.get(`${this.api_url}/api/rooms/${id}`)
+                    await  axios.get(`${this.api_url}/api/rooms/${id}`)
                     .then((response) => {
                         this.room_data = response.data
                     })
@@ -55,6 +62,8 @@
     
     <template>
     <div class="side_component">
+        <!-- {{roomStore.getRooms}}
+        <a class="btn  btn-sm btn-danger " @click="roomStore.incrementRoom">+++</a> -->
         <a class="btn close_sidebar btn-sm btn-danger " @click="$emit('close')">close</a>
         <h5 class="mt-1">View Room Data</h5> 
         <hr>

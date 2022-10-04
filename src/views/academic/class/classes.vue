@@ -2,8 +2,8 @@
 import axios from 'axios'
 import { useAuthInfo } from '@/stores/authinfo.js' 
 
-import loader from '../../../components/loader.vue'
-import pagination from '../../../components/pagination.vue'
+import loader from '../../../components/shared/loader.vue'
+import pagination from '../../../components/shared/pagination.vue'
 
 export default{
     components: {loader,pagination },

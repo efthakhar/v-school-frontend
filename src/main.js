@@ -23,7 +23,7 @@ axios.interceptors.response.use(function (response) {
    
     if (error.response && error.response.status === 401)
      {
-         console.log(error.response.data.message)
+         //console.log(error.response.data.message)
          if(error.response.data.message==='Unauthenticated.')
          {
           useAuthInfo().logout()
@@ -44,5 +44,8 @@ app.use(createPinia())
 app.use(router)
 
 
+axios.defaults.baseURL ='http://127.0.0.1:8000';
 app.config.globalProperties.api_url = 'http://127.0.0.1:8000'
+
+
 app.mount('#app')

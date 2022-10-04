@@ -1,29 +1,34 @@
 <script>
-    import axios from 'axios'
-    import { useAuthInfo } from '@/stores/authinfo.js' 
+import axios from 'axios'
+import { useAuthInfo } from '@/stores/authinfo.js' 
+import { useRoomStore } from '../../stores/academic/roomStore'
+
+import loader from '../../components/shared/loader.vue'
+import pagination from '../../components/shared/pagination.vue'
+
+import addRoom from '../../components/academic/room/add-room.vue'
+import editRoom from '../../components/academic/room/edit-room.vue'
+import viewRoom from '../../components/academic/room/view-room.vue'
+import { mapState, mapStores } from 'pinia'
     
-    import loader from '../../components/loader.vue'
-    import pagination from '../../components/pagination.vue'
     
-    import addRoom from '../../components/academic/room/add-room.vue'
-    import editRoom from '../../components/academic/room/edit-room.vue'
-    import viewRoom from '../../components/academic/room/view-room.vue'
-    
-    
-    export default{
+export default{
+
+       
+
+        computed:{
+            ...mapStores(useRoomStore),
+          
+        },
+       
         components:{ loader, pagination, addRoom,editRoom, viewRoom},
         data(){
+            
             return{
+               
                 loading:false,
-    
-                current_page:1,
-                total_pages:0,
-    
                 userPermissions: useAuthInfo().getPermissions,
-                rooms:[],
-                edit_room_id: null,
-                view_room_id: null,
-    
+                
                 addRoomSidebar : false,
                 editRoomSidebar: false,
                 viewRoomSidebar: false
@@ -31,35 +36,18 @@
             }
         },
         methods:{
-           async getRooms(page){
-                 this.current_page = page
-                 this.loading = true
-                 await  axios.get(`${this.api_url}/api/rooms?page=${page}`)
-                .then((response) => {
-                    this.rooms = response.data.data
-                    this.total_pages= Math.ceil(response.data.total/response.data.per_page)
-                    this.loading = false
-                })
+
+            async fetchData(page){
+                this.loading = true
+                await this.roomStore.fetchRooms(page)
+                this.loading = false
             },
-    
-           async change_page(page_no){
-                this.current_page = page_no
-                this.getRooms(this.current_page)
+           async changePage(page){
+                this.loading = true
+                await this.roomStore.change_page(page)
+                this.loading = false
             },
-            async deleteRoom(id){
-                await axios.delete(`${this.api_url}/api/rooms/${id}`)
-                .then((response) => {
-                    
-                    if(this.rooms.length==1){
-                        this.current_page -=1
-                        this.getRooms(this.current_page)
-                    }else{
-                        this.getRooms(this.current_page)
-                    }
-                })
-                
-                
-            },
+
             openEditSidebar(id){ 
                 this.editRoomSidebar = true
                 this.edit_room_id = id
@@ -69,9 +57,11 @@
                 this.viewRoomSidebar = true
             }
         },
+
         mounted(){
-            this.getRooms(this.current_page)
+            this.fetchData(1)
         }
+
     }
     </script>
     <template>
@@ -98,7 +88,7 @@
                                 </tr>
                             </thead>             
                             <tbody>
-                                <tr v-for="room in rooms" :key="room.id">
+                                <tr v-for="room in roomStore.getRooms" :key="room.id">
                                     <td class="text-right">{{room.room_no}}</td>
                                     <td class="text-right">{{room.room_name}}</td>
                                     <td class="text-right">{{room.building_name}}</td>
@@ -120,7 +110,7 @@
         
                                         <span class="action_btn action_delete_btn" title="delete" 
                                         v-if="userPermissions.includes('room_delete')"
-                                        @click="deleteRoom(room.id)">
+                                        @click="roomStore.deleteRoom(room.id)">
                                             &#9746;
                                         </span>
         
@@ -130,8 +120,10 @@
                         </table>
                         </div> 
     
-                        <pagination  :total_pages='total_pages' 
-                         @pageChange='change_page' :current_page="current_page"
+                        <pagination  
+                            :total_pages='roomStore.total_pages' 
+                            @pageChange='changePage' 
+                            :current_page="roomStore.current_page"
                          />
     
                     </div>
@@ -139,8 +131,9 @@
             </div>
             <div class="side_component_container">
                 
+                
                 <addRoom
-                    @refreshData='getRooms(1)' 
+                   @refreshData='this.fetchData(1)'
                     v-if="addRoomSidebar"
                     @close="addRoomSidebar=false"
                 />
@@ -158,7 +151,3 @@
     
     </template>
     
-    <style>
-    
-    
-    </style>

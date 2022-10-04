@@ -1,9 +1,6 @@
 <script>
  export default{
     props:['total_pages','current_page'],
-    methods:{
-   
-    }
  }   
 </script>
 

@@ -51,32 +51,42 @@ const router = createRouter({
             meta: { permissions:['dashboard']}
           },
 
-          // session
+         // session
           {
             name:'sessions',
             path: 'sessions',
-            component: () =>  import('../views/academic/session/sessions.vue'),
-            meta: { permissions:['session_view']}
+            component: () =>  import('../modules/academic/session/views/sessions.vue'),
+            meta: { permissions:'session_view'}
           
           },
-          {
-            name:'add-session',
-            path: 'sessions/add-session',
-            component: () =>  import('../views/academic/session/add-session.vue'),
-            meta: { permissions:['session_create']}
-          },
-          {
-            name:'edit-session',
-            path: 'sessions/edit-session/:id',
-            component: () =>  import('../views/academic/session/edit-session.vue'),
-            meta: { permissions:['session_update']}
-          },
-          {
-            name:'view-session',
-            path: 'sessions/view-session/:id',
-            component: () =>  import('../views/academic/session/view-session.vue'),
-            meta: { permissions:['session_view']}
-          },
+
+          // session
+          // {
+          //   name:'sessions',
+          //   path: 'sessions',
+          //   component: () =>  import('../views/academic/session/sessions.vue'),
+          //   meta: { permissions:['session_view']}
+          
+          // },
+
+          // {
+          //   name:'add-session',
+          //   path: 'sessions/add-session',
+          //   component: () =>  import('../views/academic/session/add-session.vue'),
+          //   meta: { permissions:['session_create']}
+          // },
+          // {
+          //   name:'edit-session',
+          //   path: 'sessions/edit-session/:id',
+          //   component: () =>  import('../views/academic/session/edit-session.vue'),
+          //   meta: { permissions:['session_update']}
+          // },
+          // {
+          //   name:'view-session',
+          //   path: 'sessions/view-session/:id',
+          //   component: () =>  import('../views/academic/session/view-session.vue'),
+          //   meta: { permissions:['session_view']}
+          // },
 
           // class
           {
@@ -162,13 +172,22 @@ router.beforeEach(async (to, from,next) => {
           let required_permissions = to.meta.permissions || []
           let user_permissions = authInfo.getPermissions
          
-            let permittied = false
-            
-             required_permissions.forEach(permission => {
+             let permittied = false
+             
+            if( !Array.isArray(required_permissions)) 
+            {
+              user_permissions.includes(required_permissions)? permittied = true : false
 
-              user_permissions.includes(permission)? permittied = true : false
+            }else{
 
-            });
+              required_permissions.forEach(permission => {
+
+                user_permissions.includes(permission)? permittied = true : false
+ 
+              });
+
+            }
+
 
             if(permittied==true){
                next()

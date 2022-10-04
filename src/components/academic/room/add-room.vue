@@ -1,8 +1,11 @@
 <script>
 import axios from 'axios'    
+import { mapStores } from 'pinia'
+import { useRoomStore } from '../../../stores/academic/roomStore'
 export default{
     data(){
         return{
+
             buildings:[],
             room_data:
             {
@@ -17,6 +20,7 @@ export default{
         }
     },
     methods:{
+
         async getAllBuildings(){
             
             await  axios.get(`${this.api_url}/api/buildings/all`)
@@ -25,20 +29,27 @@ export default{
             })
         }, 
 
-       async addRoom(){
-            axios.post(`${this.api_url}/api/rooms`, this.room_data)
-                .then((response) => {
-                    this.$emit('close')
-                    this.$emit('refreshData',1)               
-                })
-                .catch((error) =>
-                {   console.log(error.response.data)
-                    this.room_no_error =  error.response.data.errors.room_no 
-                    this.building_name_error =  error.response.data.errors.building_id
-                })
-        },
+        async  submitRoom(data){
+
+            try{
+                await  this.roomStore.addRoom(data)
+                this.$emit('close') 
+                this.$emit('refreshData')
+
+            }catch(error){
+                this.room_no_error =  error.response.data.errors.room_no
+                this.building_name_error =  error.response.data.errors.building_id
+            }
+
+       
+        }
         
     },
+    
+    computed:{
+        ...mapStores(useRoomStore)
+    },
+
     mounted(){
         this.getAllBuildings()
     }
@@ -75,7 +86,9 @@ export default{
     </div>
 
     <div class="form_item ">
-        <a class="btn btn-primary my-3" @click="addRoom">Submit Room data</a>
+        <a class="btn btn-primary my-3" @click="submitRoom(room_data)">
+            Submit Room data
+        </a>
     </div>
 </div>    
 </template>

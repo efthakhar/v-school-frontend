@@ -6,8 +6,9 @@ import { sidebarStatus } from '../stores/sidebar-status.js'
 export default{
     data(){
         return{
-             sidebar_status: sidebarStatus(),
-             authInfo: useAuthInfo()
+            
+            sidebar_status: sidebarStatus(),
+            authInfo: useAuthInfo()
         }
     },
     methods:{
@@ -20,6 +21,7 @@ export default{
             this.$router.push('login')
        },
     },
+   
    
     
 }

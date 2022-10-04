@@ -2,8 +2,8 @@
 import axios from 'axios'
 import { useAuthInfo } from '@/stores/authinfo.js' 
 
-import loader from '../../components/loader.vue'
-import pagination from '../../components/pagination.vue'
+import loader from '../../components/shared/loader.vue'
+import pagination from '../../components/shared/pagination.vue'
 
 import addBuilding from '../../components/academic/building/add-building.vue'
 import editBuilding from '../../components/academic/building/edit-building.vue'

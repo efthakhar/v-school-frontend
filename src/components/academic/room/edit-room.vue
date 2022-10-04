@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios'    
-import loader from '../../loader.vue'
+import loader from '../../shared/loader.vue'
 
 export default{
   components: { loader },

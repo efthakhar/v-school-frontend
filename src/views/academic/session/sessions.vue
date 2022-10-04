@@ -1,7 +1,7 @@
 <script>
 import axios from 'axios'
 import { useAuthInfo } from '@/stores/authinfo.js' 
-import loader from '../../../components/loader.vue'
+import loader from '../../../components/shared/loader.vue'
  export default{
     components: {loader},
     data(){
