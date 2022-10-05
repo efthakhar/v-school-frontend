@@ -10,11 +10,25 @@ export const useSessionStore = defineStore('session', {
         current_page:1,
         total_pages:0,
         sessions:[],
-
         sessions_list:[],
+        selected_sessions:[],
 
         edit_session_id: null,
         view_session_id: null,
+
+        add_session_errors:{
+            session_name:'',
+            session_code:'',
+            start_date:'',
+            end_date: ''
+        },
+
+        edit_session_errors:{
+            session_name:'',
+            session_code:'',
+            start_date:'',
+            end_date: ''
+        },
 
         current_session_item:{
             session_name:'',
@@ -25,6 +39,7 @@ export const useSessionStore = defineStore('session', {
             active_status: false,
             session_description: ''
         }
+
        
      }),
 
@@ -67,26 +82,11 @@ export const useSessionStore = defineStore('session', {
                     reject(errors)
 
                 })
-
             })
                    
         },
 
-     resetCurrentSessionData(){
-
-            this.current_session_item = {
-                session_name:'',
-                session_code:'',
-                start_date:'',
-                end_date: '',
-                session_description:'',
-                active_status: false,
-                session_description: ''
-            }
-
-        },
-   
-      async  addSession(data){   
+        async  addSession(data){   
 
             return new Promise((resolve,reject)=>{
 
@@ -99,6 +99,10 @@ export const useSessionStore = defineStore('session', {
                     })
                     .catch((errors)=>{
                       
+                        this.add_session_errors.session_name = errors.response.data.errors.session_name
+                        this.add_session_errors.session_code = errors.response.data.errors.session_code
+                        this.add_session_errors.start_date = errors.response.data.errors.start_date
+                        this.add_session_errors.end_date = errors.response.data.errors.end_date
                         reject(errors)   
 
                     })
@@ -106,7 +110,8 @@ export const useSessionStore = defineStore('session', {
             })
                         
         },
-      async  updateSession(data){   
+
+        async  updateSession(data){   
 
             return new Promise((resolve,reject)=>{
 
@@ -118,7 +123,10 @@ export const useSessionStore = defineStore('session', {
 
                     })
                     .catch((errors)=>{
-                      
+                        this.edit_session_errors.session_name = errors.response.data.errors.session_name
+                        this.edit_session_errors.session_code = errors.response.data.errors.session_code
+                        this.edit_session_errors.start_date = errors.response.data.errors.start_date
+                        this.edit_session_errors.end_date = errors.response.data.errors.end_date
                         reject(errors)   
 
                     })
@@ -127,39 +135,36 @@ export const useSessionStore = defineStore('session', {
                         
         },
 
+        async deleteSession(id){
 
-        editSession(id){
-
-             axios.put(`${this.api_url}/api/sessions/${id}`, this.session_data)
-                 .then((response) => {
-                     this.$router.push({name:'sessions'})
-                 //    this.$router.push({name:'edit-session', params: { id: this.session_data.id } })
-                 })
-        }
-
-    //     async deleteRoom(id){
-
-    //         await axios.delete(`/api/rooms/${id}`)
-    //         .then((response) => {
+            await axios.delete(`/api/sessions/${id}`)
+            .then((response) => {
                 
-    //             if(this.rooms.length==1){
-    //                 this.current_page -=1
-    //                 this.fetchRooms(this.current_page)
-    //             }else{
-    //                 this.fetchRooms(this.current_page)
-    //             }
-    //          })       
+                if(this.sessions.length==1){
+                    this.current_page -=1
+                    this.fetchSessions(this.current_page)
+                }else{
+                    this.fetchSessions(this.current_page)
+                }
+             })       
           
-    //     },
-     
-    //    async change_page(page_no){
-    //        this.current_page = page_no
-    //        await  this.fetchRooms(this.current_page)
-    //    },
+        },
+        
+        resetCurrentSessionData(){
 
+            this.current_session_item = {
+                session_name:'',
+                session_code:'',
+                start_date:'',
+                end_date: '',
+                session_description:'',
+                active_status: false,
+                session_description: ''
+            }
+            this.add_session_errors = []
+            this.edit_session_errors = []
 
-
-
+        },
 
 
     },

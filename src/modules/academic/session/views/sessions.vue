@@ -6,6 +6,7 @@ import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
 import AddSession from '../../../../modules/academic/session/components/add-session.vue';
 import EditSession from '../../../../modules/academic/session/components/edit-session.vue';
+import ViewSession from '../../../../modules/academic/session/components/view-session.vue';
 
 
 
@@ -13,21 +14,34 @@ const loading = ref(false)
 
 const editSessionSidebar = ref(false)
 const addSessionSidebar = ref(false)
+const viewSessionSidebar = ref(false)
 
 const sessionStore = useSessionStore()
 
 const userPermissions  = useAuthInfo().getPermissions
 
 async function fetchData(page){
-    loading.value =  true
-    await sessionStore.fetchSessions(page)
-    loading.value = false
+    try{
+        loading.value =  true
+        await sessionStore.fetchSessions(page)
+        loading.value = false
+    }catch(errors){
+        
+        console.log('database error occured')
+        loading.value = false
+    }
+    
 }
 
 function openEditSessionSidebar(id){
     sessionStore.edit_session_id = id
     editSessionSidebar.value = true
 }
+function openViewSessionSidebar(id){
+    sessionStore.view_session_id = id
+    viewSessionSidebar.value = true
+}
+
 
 onMounted(()=>{
     fetchData(1)
@@ -81,25 +95,29 @@ onMounted(()=>{
                                     >
                                         &#9998;
                                     </a>
-                                    <!-- 
-                                    <router-link class="action_btn action_view_btn" 
-                                    title="view" :to="{ name: 'view-session', params:{id:session.id} }">
                                     
+                                    <a class="action_btn action_view_btn" 
+                                       title="view" 
+                                       v-if="userPermissions.includes('session_view')"
+                                       @click="openViewSessionSidebar(session.id)"
+                                    >          
                                          &#128065;
-                                    </router-link>
+                                    </a>
     
-                                    
+                                  
                                     <span class="action_btn action_delete_btn" title="delete" 
-                                    v-if="userPermissions.includes('session_delete')"
-                                    @click="deleteSession(session.id)">
+                                        v-if="userPermissions.includes('session_delete')"
+                                        @click="sessionStore.deleteSession(session.id)"
+                                    >
                                         &#9746;
-                                    </span> -->
+                                    </span> 
     
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <pagination  
+                            v-if="sessionStore.sessions.length>0"
                             :total_pages=sessionStore.total_pages 
                             @pageChange='fetchData' 
                             :current_page=sessionStore.current_page
@@ -111,7 +129,9 @@ onMounted(()=>{
         </div>
 
        
-            <div class="side_component_container" v-if="addSessionSidebar==true||editSessionSidebar==true">
+            <div class="side_component_container" 
+                v-if=" addSessionSidebar==true || editSessionSidebar==true || viewSessionSidebar == true"
+            >
                 <AddSession 
                     v-if="addSessionSidebar==true"
                     @close="addSessionSidebar=false" 
@@ -120,13 +140,14 @@ onMounted(()=>{
                 <EditSession
                     v-if="editSessionSidebar" 
                     :session_id="sessionStore.edit_session_id"
-                    @refreshData='fetchData(sessionStore.current_page)' 
+                    @refreshData='fetchData(2)' 
                     @close="editSessionSidebar=false" 
                 />
-                    <!-- <viewRoom 
-                        v-if="viewRoomSidebar" :room_id="view_room_id"
-                        @close="viewRoomSidebar=false" 
-                    />   -->
+                <ViewSession
+                    v-if="viewSessionSidebar" 
+                    :session_id="sessionStore.view_session_id"
+                    @close="viewSessionSidebar=false" 
+                />  
             </div>
         
 

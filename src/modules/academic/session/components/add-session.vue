@@ -11,9 +11,13 @@ const session_data = computed(()=> sessionStore.current_session_item )
 
 async function submitData(){
 
-    await sessionStore.addSession(sessionStore.current_session_item)
-    emit('refreshData')
-    emit('close')
+    try{
+        await sessionStore.addSession(sessionStore.current_session_item)
+        emit('refreshData')
+        emit('close')
+    }catch(error){
+        console.log('validation error occured')
+    }
     
 }
 
@@ -34,18 +38,38 @@ async function closeAddSessionSidebar(){
 
                 <div class="form_item ">
                     <label class="my-2">session name</label>
+                    <p class="error_txt" 
+                    v-if="sessionStore.add_session_errors.session_name"
+                    >
+                        {{sessionStore.add_session_errors.session_name}}
+                    </p>
                     <input type="text" class="form-control" v-model="session_data.session_name">
                 </div>
                 <div class="form_item ">
                     <label class="my-2">session code</label>
+                    <p class="error_txt" 
+                    v-if="sessionStore.add_session_errors.session_code"
+                    >
+                        {{sessionStore.add_session_errors.session_code}}
+                    </p>
                     <input type="text" class="form-control" v-model="session_data.session_code">
                 </div>
                 <div class="form_item ">
                     <label class="my-2">From</label>
+                    <p class="error_txt" 
+                    v-if="sessionStore.add_session_errors.start_date"
+                    >
+                        {{sessionStore.add_session_errors.start_date}}
+                    </p>
                     <input type="date" class="form-control" v-model="session_data.start_date">
                 </div>
                 <div class="form_item ">
                     <label class="my-2">To</label>
+                    <p class="error_txt" 
+                    v-if="sessionStore.add_session_errors.end_date"
+                    >
+                        {{sessionStore.add_session_errors.end_date}}
+                    </p>
                     <input type="date" class="form-control" v-model="session_data.end_date">
                 </div>
 

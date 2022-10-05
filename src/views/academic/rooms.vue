@@ -129,11 +129,11 @@ export default{
                     </div>
                 </div>     
             </div>
-            <div class="side_component_container">
+            <div class="side_component_container" v-if="addRoomSidebar==true">
                 
                 
                 <addRoom
-                   @refreshData='this.fetchData(1)'
+                    @refreshData='fetchData(1)'
                     v-if="addRoomSidebar"
                     @close="addRoomSidebar=false"
                 />
