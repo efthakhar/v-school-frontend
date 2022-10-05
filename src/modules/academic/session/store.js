@@ -34,6 +34,22 @@ export const useSessionStore = defineStore('session', {
 
     actions: {
 
+        async fetchSession(id){
+            
+            return new Promise((resolve,reject)=>{
+
+                axios.get(`/api/sessions/${id}`)
+                .then((response) => {   
+                    this.current_session_item = response.data
+                    resolve(response)
+                })
+                .catch((errors)=>{
+                    reject(errors)
+                })
+
+            })
+        },
+
         async fetchSessions(page){
 
             return new Promise((resolve,reject)=>{
@@ -90,19 +106,36 @@ export const useSessionStore = defineStore('session', {
             })
                         
         },
+      async  updateSession(data){   
 
-    //     async fetchRoom(id){
+            return new Promise((resolve,reject)=>{
 
-    //          return new Promise((resolve,reject)=>{
+                    axios.put(`/api/sessions/${this.edit_session_id}`, data)
+                    .then((response) => {
 
-    //             axios.get(`${this.api_url}/api/rooms/${id}`)
-    //             .then((response) => {
-    //                 this.room_data = response.data
-    //             })
+                        this.resetCurrentSessionData()
+                        resolve(response)
 
-    //          })      
-              
-    //     },
+                    })
+                    .catch((errors)=>{
+                      
+                        reject(errors)   
+
+                    })
+
+            })
+                        
+        },
+
+
+        editSession(id){
+
+             axios.put(`${this.api_url}/api/sessions/${id}`, this.session_data)
+                 .then((response) => {
+                     this.$router.push({name:'sessions'})
+                 //    this.$router.push({name:'edit-session', params: { id: this.session_data.id } })
+                 })
+        }
 
     //     async deleteRoom(id){
 

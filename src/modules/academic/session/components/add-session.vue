@@ -17,13 +17,17 @@ async function submitData(){
     
 }
 
+async function closeAddSessionSidebar(){
+    sessionStore.resetCurrentSessionData()
+    emit('close')
+}
 
 </script>
     
 <template>
     <div class="side_component">
         
-        <a class="btn close_sidebar btn-sm btn-danger " @click="$emit('close')">close</a>
+        <a class="btn close_sidebar btn-sm btn-danger " @click="closeAddSessionSidebar">close</a>
         <h5 class="mt-1">Add new Session</h5> 
         <hr>
         <form class="row mb-2" @submit.prevent="submitData">

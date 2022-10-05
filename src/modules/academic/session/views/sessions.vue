@@ -1,25 +1,38 @@
 <script setup>
-
+import { useAuthInfo } from '../../../../stores/authinfo';
 import { onMounted, ref } from '@vue/runtime-core';
 import { useSessionStore } from '../store';
 import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
 import AddSession from '../../../../modules/academic/session/components/add-session.vue';
+import EditSession from '../../../../modules/academic/session/components/edit-session.vue';
+
 
 
 const loading = ref(false)
+
+const editSessionSidebar = ref(false)
 const addSessionSidebar = ref(false)
-const sesstionStore = useSessionStore()
+
+const sessionStore = useSessionStore()
+
+const userPermissions  = useAuthInfo().getPermissions
 
 async function fetchData(page){
     loading.value =  true
-    await sesstionStore.fetchSessions(page)
+    await sessionStore.fetchSessions(page)
     loading.value = false
+}
+
+function openEditSessionSidebar(id){
+    sessionStore.edit_session_id = id
+    editSessionSidebar.value = true
 }
 
 onMounted(()=>{
     fetchData(1)
 })
+
 
 </script>
 
@@ -51,7 +64,7 @@ onMounted(()=>{
                             </tr>
                         </thead>
                         <tbody >
-                            <tr v-for="session in sesstionStore.sessions" :key="session.id">
+                            <tr v-for="session in sessionStore.sessions" :key="session.id">
                                 <td class="text-right">{{session.session_name}}</td>
                                 <td class="text-right">{{session.session_code}}</td>
                                 <td class="text-right">{{session.start_date}}</td>
@@ -61,13 +74,14 @@ onMounted(()=>{
                                 </td>
                                 <td class="text-right">
     
-                                    <!-- <router-link class="action_btn action_edit_btn" 
-                                    title="edit" :to="{ name: 'edit-session', params:{id:session.id} }"
-                                    v-if="userPermissions.includes('session_update')"
+                                    <a class="action_btn action_edit_btn" title="edit" 
+                                       v-if="userPermissions.includes('session_update')"
+                                       @click="openEditSessionSidebar(session.id)"
+
                                     >
                                         &#9998;
-                                    </router-link>
-    
+                                    </a>
+                                    <!-- 
                                     <router-link class="action_btn action_view_btn" 
                                     title="view" :to="{ name: 'view-session', params:{id:session.id} }">
                                     
@@ -86,9 +100,9 @@ onMounted(()=>{
                         </tbody>
                     </table>
                     <pagination  
-                            :total_pages=sesstionStore.total_pages 
+                            :total_pages=sessionStore.total_pages 
                             @pageChange='fetchData' 
-                            :current_page=sesstionStore.current_page
+                            :current_page=sessionStore.current_page
                     />
                     </div> 
                 </div>
@@ -96,28 +110,25 @@ onMounted(()=>{
             </div>
         </div>
 
-        <div class="side_component_container">
-               <AddSession 
-                   v-if="addSessionSidebar==true"
-                   @close="addSessionSidebar=false" 
-                   @refreshData='fetchData(1)' 
-               />      
-                <!-- <addRoom
-                   @refreshData='this.fetchData(1)'
-                    v-if="addRoomSidebar"
-                    @close="addRoomSidebar=false"
+       
+            <div class="side_component_container" v-if="addSessionSidebar==true||editSessionSidebar==true">
+                <AddSession 
+                    v-if="addSessionSidebar==true"
+                    @close="addSessionSidebar=false" 
+                    @refreshData='fetchData(1)' 
+                />      
+                <EditSession
+                    v-if="editSessionSidebar" 
+                    :session_id="sessionStore.edit_session_id"
+                    @refreshData='fetchData(sessionStore.current_page)' 
+                    @close="editSessionSidebar=false" 
                 />
-                <editRoom
-                    @refreshData='getRooms(current_page)' 
-                    v-if="editRoomSidebar" :room_id="edit_room_id"
-                    @close="editRoomSidebar=false" 
-                />
-                <viewRoom 
-                    v-if="viewRoomSidebar" :room_id="view_room_id"
-                    @close="viewRoomSidebar=false" 
-                /> -->
-        </div>
-
+                    <!-- <viewRoom 
+                        v-if="viewRoomSidebar" :room_id="view_room_id"
+                        @close="viewRoomSidebar=false" 
+                    />   -->
+            </div>
+        
 
     </div>    
 </template>

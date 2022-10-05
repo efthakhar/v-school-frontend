@@ -14,6 +14,7 @@ export const useRoomStore = defineStore('room', {
         view_room_id: null,
 
         add_room_errors: [],
+       
 
         
        
