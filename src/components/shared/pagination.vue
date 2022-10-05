@@ -30,7 +30,7 @@
             </li>
             <!-- current page -->
             <li class="page-item active"  @click="$emit('pageChange',current_page)">
-                <button class="page-link" >{{current_page}}</button>
+                <button disabled class="page-link" >{{current_page}}</button>
             </li>
             <!-- current page + 1 -->
             <li class="page-item" @click="$emit('pageChange',current_page+1)"

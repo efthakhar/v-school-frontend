@@ -43,74 +43,25 @@ const router = createRouter({
         component: () =>  import('../views/dashboard/dashboard.vue'),
 
         children: [
-          // dashboard overview
+           // dashboard overview
           {
             name:'overview',
             path: 'overview',
             component: () =>  import('../views/dashboard/overview.vue'),
             meta: { permissions:['dashboard']}
           },
-
-         // session
+           // session
           {
             name:'sessions',
             path: 'sessions',
             component: () =>  import('../modules/academic/session/views/sessions.vue'),
-            meta: { permissions:'session_view'}
-          
+            meta: { permissions:'session_view'} 
           },
-
-          // session
-          // {
-          //   name:'sessions',
-          //   path: 'sessions',
-          //   component: () =>  import('../views/academic/session/sessions.vue'),
-          //   meta: { permissions:['session_view']}
-          
-          // },
-
-          // {
-          //   name:'add-session',
-          //   path: 'sessions/add-session',
-          //   component: () =>  import('../views/academic/session/add-session.vue'),
-          //   meta: { permissions:['session_create']}
-          // },
-          // {
-          //   name:'edit-session',
-          //   path: 'sessions/edit-session/:id',
-          //   component: () =>  import('../views/academic/session/edit-session.vue'),
-          //   meta: { permissions:['session_update']}
-          // },
-          // {
-          //   name:'view-session',
-          //   path: 'sessions/view-session/:id',
-          //   component: () =>  import('../views/academic/session/view-session.vue'),
-          //   meta: { permissions:['session_view']}
-          // },
-
           // class
           {
             name:'classes',
             path: 'classes',
-            component: () =>  import('../views/academic/class/classes.vue'),
-            meta: { permissions:['class_view']}
-          },
-          {
-            name:'add-class',
-            path: 'classes/add-class',
-            component: () =>  import('../views/academic/class/add-class.vue'),
-            meta: { permissions:['class_create']}
-          },
-          {
-            name:'edit-class',
-            path: 'classes/edit-class/:id',
-            component: () =>  import('../views/academic/class/edit-class.vue'),
-            meta: { permissions:['class_create']}
-          },
-          {
-            name:'view-class',
-            path: 'classes/view-class/:id',
-            component: () =>  import('../views/academic/class/view-class.vue'),
+            component: () =>  import('../modules/academic/class/views/classes.vue'),
             meta: { permissions:['class_view']}
           },
 

@@ -86,6 +86,23 @@ export const useSessionStore = defineStore('session', {
                    
         },
 
+        async fetchSessionsList(){
+
+            return new Promise((resolve,reject)=>{
+
+                axios.get(`/api/sessions/list`)
+                .then((response) => {
+                    this.sessions_list = response.data
+                    resolve(response)
+                })
+                .catch((errors)=>{
+                    reject(errors)
+                })
+            })
+                   
+        },
+
+
         async  addSession(data){   
 
             return new Promise((resolve,reject)=>{
