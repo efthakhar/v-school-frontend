@@ -16,7 +16,7 @@ const loading = ref(false)
 async function submitData(){
     try{
         await sessionStore.updateSession(sessionStore.current_session_item)
-        emit('refreshData')
+        emit('refreshData') 
         emit('close')
     }catch(error){
         console.log('validation error occured')
@@ -88,7 +88,11 @@ onMounted(()=>{
                 </div>
 
                 <div class="form_item  check_box_container">
-                    <input class="" type="checkbox"  v-model="session_data.active_status" id="flexCheckDefault" > 
+                    <input class="" type="checkbox"  
+                      :checked="session_data.active_status==1" id="flexCheckDefault" 
+                      @click="session_data.active_status==0?
+                      session_data.active_status=1:session_data.active_status=0"
+                    > 
                     <label class="form-check-label" for="flexCheckDefault" >
                         Active Status
                     </label>

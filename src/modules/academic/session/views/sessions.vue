@@ -140,7 +140,7 @@ onMounted(()=>{
                 <EditSession
                     v-if="editSessionSidebar" 
                     :session_id="sessionStore.edit_session_id"
-                    @refreshData='fetchData(2)' 
+                    @refreshData='fetchData(sessionStore.current_page)' 
                     @close="editSessionSidebar=false" 
                 />
                 <ViewSession

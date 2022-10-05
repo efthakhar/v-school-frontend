@@ -21,7 +21,7 @@ async function closeViewSessionSidebar(){
 async  function fetchData(id){
     loading.value = true
     await sessionStore.fetchSession(props.session_id)
-    loading.value = false
+    loading.value = false 
 }
     
 onMounted(()=>{
@@ -57,7 +57,9 @@ onMounted(()=>{
                     </div>
     
                     <div class="form_item  check_box_container">
-                        <input disabled class="" type="checkbox"  v-model="session_data.active_status" id="flexCheckDefault" > 
+                        <input disabled class="" type="checkbox"  
+                        :checked="session_data.active_status==1"
+                        id="flexCheckDefault" > 
                         <label  class="form-check-label" for="flexCheckDefault" >
                             Active Status
                         </label>
