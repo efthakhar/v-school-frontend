@@ -1,7 +1,7 @@
 
 import { defineStore } from 'pinia'
 import axios from 'axios'   
-
+import { useNotificationStore } from '../../../stores/notifications'
 export const useSessionStore = defineStore('session', {
 
     state: () =>
@@ -111,6 +111,12 @@ export const useSessionStore = defineStore('session', {
                     .then((response) => {
 
                         this.resetCurrentSessionData()
+                        const notifcationStore = useNotificationStore()
+                        notifcationStore.pushNotification({
+                            'message':'new class added successfully',
+                            'type'   :'success',
+                            'time':2000
+                        })
                         resolve(response)
 
                     })

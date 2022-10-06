@@ -28,7 +28,7 @@ async function closeAddClassSidebar(){
 }
 
 onMounted(()=>{
-    sessionStore.fetchSessionsList()
+
     fetchData(props.class_id)
 })
 
@@ -50,16 +50,7 @@ onMounted(()=>{
 
                 <div class="form_item ">
                     <label class="my-2">session name</label>
-                    <input disabled type="text" class="form-control" v-model="class_data.session_name">
-                    <!-- <select disabled  class="form-control" v-model="class_data.session_id">
-                        <option value="">select a session</option>
-                        <option :value="session.id"
-                                 v-for="session in sessionStore.sessions_list"
-                                 :key="session.id"
-                        >
-                        {{session.session_name}}
-                        </option>
-                    </select> -->
+                    <input disabled type="text" class="form-control" v-model="class_data.session_name">             
                 </div>
 
                 

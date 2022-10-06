@@ -1,12 +1,13 @@
 
 import { defineStore } from 'pinia'
-import axios from 'axios'   
+import axios from 'axios' 
+import { useNotificationStore } from '../../../stores/notifications'  
 
 export const useClassStore = defineStore('class', {
 
     state: () =>
      ({ 
-        
+       
         current_page:1,
         total_pages:0,
         classes:[],
@@ -83,6 +84,14 @@ export const useClassStore = defineStore('class', {
                     .then((response) => {
 
                         this.resetCurrentClassData()
+
+                        const notifcationStore = useNotificationStore()
+                        notifcationStore.pushNotification({
+                            'message':'new class added successfully',
+                            'type'   :'success',
+                            'time':4000
+                        })
+
                         resolve(response)
 
                     })
@@ -159,7 +168,7 @@ export const useClassStore = defineStore('class', {
         },
 
         async deleteClass(id){
-            
+
             if(confirm("Are you sure to delete the class??")){
 
                 await axios.delete(`/api/classes/${id}`)

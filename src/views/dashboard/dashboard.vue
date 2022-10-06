@@ -1,30 +1,26 @@
-<script>
+<script setup>
 
 import { RouterLink, RouterView } from 'vue-router'
 import { sidebarStatus } from '../../stores/sidebar-status.js'
 
 import Sidebar from '../../components/sidebar.vue';
 import Header from '../../components/header.vue';
+import NotificationsContainer from '../../components/shared/notifications-container.vue';
+
+import { computed, onMounted } from '@vue/runtime-core';
+
+const sidebar_status = sidebarStatus()
 
 
+onMounted(()=>{
+    
+    if (window.innerWidth < 760) 
+    {
+         sidebar_status.hideSidebar()
+    } 
+})
 
-export default{
-    components:{ Sidebar, Header},
-    data(){
-        return{
-            sidebar_status: sidebarStatus(),
-           
-        }
-    },
-    methods:{
 
-    },
-    mounted(){
-        if (window.innerWidth < 760) {
-            this.sidebar_status.hideSidebar()
-        } 
-    }
-}
 
 </script>
 
@@ -36,10 +32,14 @@ export default{
      :class=" sidebar_status.collapsed == true ? 'dashboard-sidebar-responsive':''">
         <Sidebar/>
     </div>
-
+    <div>
+        <NotificationsContainer />
+    </div>
     <div class="dashboard-content">
         <Header />
+        
         <div class="main-content">
+            
              <RouterView />
         </div>
        
