@@ -59,21 +59,21 @@ export const useClassStore = defineStore('class', {
                    
         },
 
-        // async fetchSession(id){
+        async fetchClass(id){
             
-        //     return new Promise((resolve,reject)=>{
+            return new Promise((resolve,reject)=>{
 
-        //         axios.get(`/api/sessions/${id}`)
-        //         .then((response) => {   
-        //             this.current_session_item = response.data
-        //             resolve(response)
-        //         })
-        //         .catch((errors)=>{
-        //             reject(errors)
-        //         })
+                axios.get(`/api/classes/${id}`)
+                .then((response) => {   
+                    this.current_class_item = response.data
+                    resolve(response)
+                })
+                .catch((errors)=>{
+                    reject(errors)
+                })
 
-        //     })
-        // },
+            })
+        },
 
         async  addClass(data){   
 
@@ -94,6 +94,35 @@ export const useClassStore = defineStore('class', {
                         errors.response.data.errors.class_name
 
                         this.add_class_errors.session_name = 
+                        Array.isArray(errors.response.data.errors.session_id)? 
+                        errors.response.data.errors.session_id.join('  '):
+                        errors.response.data.errors.session_id
+                        
+                        reject(errors)   
+                    })
+
+            })
+                        
+        },
+        async  editClass(data){   
+
+            return new Promise((resolve,reject)=>{
+                  
+                    axios.put(`/api/classes/${this.edit_class_id}`, data)
+                    .then((response) => {
+
+                        this.resetCurrentClassData()
+                        resolve(response)
+
+                    })
+                    .catch((errors)=>{
+                        
+                        this.edit_class_errors.class_name = 
+                        Array.isArray(errors.response.data.errors.class_name)?
+                        errors.response.data.errors.class_name.join():
+                        errors.response.data.errors.class_name
+
+                        this.edit_class_errors.session_name = 
                         Array.isArray(errors.response.data.errors.session_id)? 
                         errors.response.data.errors.session_id.join('  '):
                         errors.response.data.errors.session_id
@@ -130,19 +159,21 @@ export const useClassStore = defineStore('class', {
         },
 
         async deleteClass(id){
-           
-            await axios.delete(`/api/classes/${id}`)
-            .then((response) => {
-                
-                if(this.classes.length==1){
-                    this.current_page -=1
-                    this.fetchClasses(this.current_page)
+            
+            if(confirm("Are you sure to delete the class??")){
+
+                await axios.delete(`/api/classes/${id}`)
+                .then((response) => {
                     
-                }else{
-                    this.fetchClasses(this.current_page)
-                }
-             })       
-          
+                    if(this.classes.length==1){
+                        this.current_page -=1
+                        this.fetchClasses(this.current_page)
+                        
+                    }else{
+                        this.fetchClasses(this.current_page)
+                    }
+                })       
+            }
         },
         
         resetCurrentClassData(){

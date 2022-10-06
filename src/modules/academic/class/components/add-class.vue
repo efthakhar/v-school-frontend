@@ -10,7 +10,6 @@ const emit = defineEmits(['close','refreshData'])
 const classStore = useClassStore()
 const sessionStore = useSessionStore()
 
-//const sessionlist = computed(() => sessionStore.fetchSessionsList())
 const class_data = computed(()=> classStore.current_class_item )
 
 async function submitData(){
@@ -38,7 +37,7 @@ onMounted(()=>{
     <div class="side_component">
         
         <a class="btn close_sidebar btn-sm btn-danger " @click="closeAddClassSidebar">close</a>
-        <h5 class="mt-1">add new class</h5> 
+        <h5 class="mt-1"> add new class </h5> 
         <hr>
         <form class="row mb-2" @submit.prevent="submitData">
 
