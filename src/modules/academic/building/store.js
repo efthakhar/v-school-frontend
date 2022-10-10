@@ -59,21 +59,21 @@ export const useBuildingStore = defineStore('building', {
                    
         },
 
-        // async fetchbuilding(id){
+        async fetchBuilding(id){
             
-        //     return new Promise((resolve,reject)=>{
+            return new Promise((resolve,reject)=>{
 
-        //         axios.get(`/api/buildings/${id}`)
-        //         .then((response) => {   
-        //             this.current_building_item = response.data
-        //             resolve(response)
-        //         })
-        //         .catch((errors)=>{
-        //             reject(errors)
-        //         })
+                axios.get(`/api/buildings/${id}`)
+                .then((response) => {   
+                    this.current_building_item = response.data
+                    resolve(response)
+                })
+                .catch((errors)=>{
+                    reject(errors)
+                })
 
-        //     })
-        // },
+            })
+        },
 
         async  addBuilding(data){   
 
@@ -118,77 +118,54 @@ export const useBuildingStore = defineStore('building', {
         },
 
 
-        // async  editbuilding(data){   
+        async  editBuilding(data){   
 
-        //     return new Promise((resolve,reject)=>{
+            return new Promise((resolve,reject)=>{
                   
-        //             axios.put(`/api/buildings/${this.edit_building_id}`, data)
-        //             .then((response) => {
+                    axios.put(`/api/buildings/${this.edit_building_id}`, data)
+                    .then((response) => {
 
-        //                 this.resetCurrentbuildingData()
-        //                 resolve(response)
+                        this.resetCurrentBuildingData()
+                        resolve(response)
 
-        //             })
-        //             .catch((errors)=>{
+                    })
+                    .catch((errors)=>{
                         
-        //                 this.edit_building_errors.building_name = 
-        //                 Array.isArray(errors.response.data.errors.building_name)?
-        //                 errors.response.data.errors.building_name.join():
-        //                 errors.response.data.errors.building_name
+                        this.edit_building_errors.building_name = 
+                        Array.isArray(errors.response.data.errors.building_name)?
+                        errors.response.data.errors.building_name.join():
+                        errors.response.data.errors.building_name
 
-        //                 this.edit_building_errors.session_name = 
-        //                 Array.isArray(errors.response.data.errors.session_id)? 
-        //                 errors.response.data.errors.session_id.join('  '):
-        //                 errors.response.data.errors.session_id
+                        this.edit_building_errors.building_location = 
+                        Array.isArray(errors.response.data.errors.building_location)? 
+                        errors.response.data.errors.building_location.join('  '):
+                        errors.response.data.errors.building_location
                         
-        //                 reject(errors)   
-        //             })
+                        reject(errors)   
+                    })
 
-        //     })
+            })
                         
-        // },
+        },
 
-        // async  updateSession(data){   
 
-        //     return new Promise((resolve,reject)=>{
+        async deleteBuilding(id){
 
-        //             axios.put(`/api/sessions/${this.edit_session_id}`, data)
-        //             .then((response) => {
+            if(confirm("Are you sure to delete the building??")){
 
-        //                 this.resetCurrentSessionData()
-        //                 resolve(response)
-
-        //             })
-        //             .catch((errors)=>{
-        //                 this.edit_session_errors.session_name = errors.response.data.errors.session_name
-        //                 this.edit_session_errors.session_code = errors.response.data.errors.session_code
-        //                 this.edit_session_errors.start_date = errors.response.data.errors.start_date
-        //                 this.edit_session_errors.end_date = errors.response.data.errors.end_date
-        //                 reject(errors)   
-
-        //             })
-
-        //     })
-                        
-        // },
-
-        // async deletebuilding(id){
-
-        //     if(confirm("Are you sure to delete the building??")){
-
-        //         await axios.delete(`/api/buildings/${id}`)
-        //         .then((response) => {
+                await axios.delete(`/api/buildings/${id}`)
+                .then((response) => {
                     
-        //             if(this.buildings.length==1){
-        //                 this.current_page -=1
-        //                 this.fetchbuildings(this.current_page)
+                    if(this.buildings.length==1){
+                        this.current_page -=1
+                        this.fetchBuildings(this.current_page)
                         
-        //             }else{
-        //                 this.fetchbuildings(this.current_page)
-        //             }
-        //         })       
-        //     }
-        // },
+                    }else{
+                        this.fetchBuildings(this.current_page)
+                    }
+                })       
+            }
+        },
         
         resetCurrentBuildingData(){
 

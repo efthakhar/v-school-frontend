@@ -1,27 +1,29 @@
 <script setup>
-
 import { reactive, ref,computed } from "@vue/reactivity";
-import { useClassStore } from "../store";
-import { useSessionStore } from '../../session/store';
+import { useBuildingStore } from "../store";
+
 import { onMounted } from "@vue/runtime-core";
 import Loader from "../../../../components/shared/loader.vue";
 
-const props = defineProps(['class_id'])
+const props = defineProps(['building_id'])
 const emit = defineEmits(['close','refreshData'])
 
 const loading = ref(false)
-const classStore = useClassStore()
-const sessionStore = useSessionStore()
+const buildingStore = useBuildingStore()
 
-const class_data = computed(()=> classStore.current_class_item )
+
+const building_data = computed(()=> buildingStore.current_building_item )
 
 async function submitData(){
 
     try{
-        await classStore.editClass(classStore.current_class_item)
+
+        await buildingStore.editBuilding(buildingStore.current_building_item)
         emit('refreshData')
         emit('close')
+
     }catch(error){
+
         console.log('validation error occured')
     }
     
@@ -29,63 +31,57 @@ async function submitData(){
 
 async  function fetchData(id){
     loading.value = true
-    await classStore.fetchClass(id)
+    await buildingStore.fetchBuilding(id)
     loading.value = false
 }
 
-async function closeAddClassSidebar(){
-    classStore.resetCurrentClassData()
+async function closeEditBuildingSidebar(){
+    buildingStore.resetCurrentBuildingData()
     emit('close')
 }
 
 onMounted(()=>{
-    sessionStore.fetchSessionsList()
-    fetchData(props.class_id)
+    fetchData(props.building_id)
 })
 </script>
-    
+
+
 <template>
+
     <div class="side_component">
         
-        <a class="btn close_sidebar btn-sm btn-danger " @click="closeAddClassSidebar">close</a>
-        <h5 class="mt-1"> edit class </h5> 
+        <a class="btn close_sidebar btn-sm btn-danger " @click="closeEditBuildingSidebar">close</a>
+        <h5 class="mt-1"> Edit building </h5> 
         <hr>
-        <Loader v-if="loading==true" />
+        <Loader  v-if="loading"/>
         <form class="row mb-2" @submit.prevent="submitData" v-if="loading==false">
 
                 <div class="form_item ">
-                    <label class="my-2">class name</label>
+                    <label class="my-2">building name</label>
                     <p class="error_txt" 
-                    v-if="classStore.edit_class_errors.class_name"
+                    v-if="buildingStore.edit_building_errors.building_name"
                     >
-                        {{classStore.edit_class_errors.class_name}}
+                        {{buildingStore.edit_building_errors.building_name}}
                     </p>
-                    <input type="text" class="form-control" v-model="class_data.class_name">
+                    <input type="text" class="form-control" v-model="building_data.building_name">
                 </div>
 
                 <div class="form_item ">
-                    <label class="my-2">session name</label>
+                    <label class="my-2">location details</label>
                     <p class="error_txt" 
-                    v-if="classStore.edit_class_errors.session_name"
+                    v-if="buildingStore.edit_building_errors.building_location"
                     >
-                        {{classStore.edit_class_errors.session_name}}
+                        {{buildingStore.edit_building_errors.building_location}}
                     </p>
-                    <select  class="form-control" v-model="class_data.session_id">
-                        <option value="">select a session</option>
-                        <option :value="session.id"
-                                 v-for="session in sessionStore.sessions_list"
-                                 :key="session.id"
-                        >
-                        {{session.session_name}}
-                        </option>
-                    </select>
+                    <input type="text" class="form-control" v-model="building_data.building_location">
                     
                 </div>
 
                 <div class="form_item col-md-10">
-                    <button type="submit" class="btn btn-primary my-3">update class data</button>
+                    <button type="submit" class="btn btn-primary my-3">edit building data</button>
                 </div>
                 
         </form>
-    </div>    
+    </div> 
+       
 </template>

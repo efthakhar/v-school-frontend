@@ -147,30 +147,7 @@ export const useClassStore = defineStore('class', {
                         
         },
 
-        async  updateSession(data){   
-
-            return new Promise((resolve,reject)=>{
-
-                    axios.put(`/api/sessions/${this.edit_session_id}`, data)
-                    .then((response) => {
-
-                        this.resetCurrentSessionData()
-                        resolve(response)
-
-                    })
-                    .catch((errors)=>{
-                        this.edit_session_errors.session_name = errors.response.data.errors.session_name
-                        this.edit_session_errors.session_code = errors.response.data.errors.session_code
-                        this.edit_session_errors.start_date = errors.response.data.errors.start_date
-                        this.edit_session_errors.end_date = errors.response.data.errors.end_date
-                        reject(errors)   
-
-                    })
-
-            })
-                        
-        },
-
+      
         async deleteClass(id){
 
             if(confirm("Are you sure to delete the class??")){

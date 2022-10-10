@@ -4,13 +4,13 @@ import { useAuthInfo } from '../../../../stores/authinfo';
 import { computed, onMounted, ref } from '@vue/runtime-core';    
 import { useBuildingStore } from '../store';
 
-import Addbuilding from '../../../../modules/academic/building/components/add-building.vue';
-// import Editbuilding from '../../../../modules/academic/building/components/edit-building.vue';
-// import Viewbuilding from '../../../../modules/academic/building/components/view-building.vue';
 
 import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
-import AddBuilding from '../../../../modules/academic/building/components/add-building.vue';
+
+import AddBuilding from '../components/add-building.vue';
+import EditBuilding from '../components/edit-building.vue';
+import ViewBuilding from '../components/view-building.vue';
 
 
 const userPermissions  = useAuthInfo().getPermissions
@@ -40,9 +40,11 @@ async function fetchData(page){
 async function deleteData(id){
 
 try{
+    
     loading.value =  true
     await buildingStore.deleteBuilding(id)
     loading.value = false
+    
 }catch(errors){  
     console.log('error occured')
     loading.value = false
@@ -55,11 +57,11 @@ onMounted(()=>{
 
 function openEditBuildingSidebar(id){
     buildingStore.edit_building_id = id
-    editbuildingSidebar.value = true
+    editBuildingSidebar.value = true
 }
 function openViewBuildingSidebar(id){
     buildingStore.view_building_id = id
-    viewbuildingSidebar.value = true
+    viewBuildingSidebar.value = true
 }
 
 
@@ -68,9 +70,9 @@ function openViewBuildingSidebar(id){
 <template>
 <div class="page-view">
     <div class="page-top-nav">
-        <h4 class="blue-txt">All Classes</h4>
+        <h4 class="blue-txt">All Building</h4>
         <a class="btn btn-primary btn-sm ms-auto" @click="addBuildingSidebar=true" >
-            add class
+            Add Building
         </a> 
     </div>
     <div class="page-main-content">
@@ -95,8 +97,8 @@ function openViewBuildingSidebar(id){
                             <td class="text-right">
 
                                 <a class="action_btn action_edit_btn" title="edit" 
-                                    v-if="userPermissions.includes('class_update')"
-                                    @click="openEditClassSidebar(class_item.id)"
+                                    v-if="userPermissions.includes('building_update')"
+                                    @click="openEditBuildingSidebar(building.id)"
                                 >
                                     &#9998;
                                 </a>
@@ -104,14 +106,14 @@ function openViewBuildingSidebar(id){
                                 <a class="action_btn action_view_btn" 
                                     title="view" 
                                     v-if="userPermissions.includes('class_view')"
-                                    @click="openViewClassSidebar(class_item.id)"
+                                    @click="openViewBuildingSidebar(building.id)"
                                 >          
                                         &#128065;
                                 </a>
 
                                 <span class="action_btn action_delete_btn" title="delete" 
-                                    v-if="userPermissions.includes('class_delete')"
-                                    @click="deleteData(class_item.id)"
+                                    v-if="userPermissions.includes('building_delete')"
+                                    @click="deleteData(building.id)"
                                 >
                                     &#9746;
                                 </span> 
@@ -141,17 +143,17 @@ function openViewBuildingSidebar(id){
                 @close="addBuildingSidebar=false" 
                 @refreshData='fetchData(1)' 
             />      
-            <!-- <EditClass
-                v-if="editClassSidebar" 
-                :class_id="classStore.edit_class_id"
-                @refreshData='fetchData(classStore.current_page)' 
-                @close="editClassSidebar=false" 
-            /> -->
-            <!-- <ViewClass
-                v-if="viewClassSidebar" 
-                :class_id="classStore.view_class_id"
-                @close="viewClassSidebar=false" 
-            />   -->
+            <EditBuilding
+                v-if="editBuildingSidebar" 
+                :building_id="buildingStore.edit_building_id"
+                @refreshData='fetchData(buildingStore.current_page)' 
+                @close="editBuildingSidebar=false" 
+            />
+            <ViewBuilding
+                v-if="viewBuildingSidebar" 
+                :building_id="buildingStore.view_building_id"
+                @close="viewBuildingSidebar=false" 
+            />  
         </div>
     
 
