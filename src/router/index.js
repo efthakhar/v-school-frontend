@@ -4,7 +4,7 @@ import { useAuthInfo } from '../stores/authinfo.js'
 import axios from 'axios'
 
 const router = createRouter({
-
+  mode: 'history',
   history: createWebHistory(import.meta.env.BASE_URL),
 
   routes: 

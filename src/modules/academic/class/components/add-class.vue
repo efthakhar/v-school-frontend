@@ -18,7 +18,7 @@ async function submitData(){
         emit('refreshData')
         emit('close')
     }catch(error){
-        console.log('validation error occured')
+        console.log('error occured')
     }
     
 }

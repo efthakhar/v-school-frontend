@@ -96,7 +96,9 @@ export const useClassStore = defineStore('class', {
 
                     })
                     .catch((errors)=>{
-                      
+                        
+                        console.log(errors)
+
                         this.add_class_errors.class_name = 
                         Array.isArray(errors.response.data.errors.class_name)?
                         errors.response.data.errors.class_name.join():
@@ -106,7 +108,9 @@ export const useClassStore = defineStore('class', {
                         Array.isArray(errors.response.data.errors.session_id)? 
                         errors.response.data.errors.session_id.join('  '):
                         errors.response.data.errors.session_id
+
                         
+
                         reject(errors)   
                     })
 
