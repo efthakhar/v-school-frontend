@@ -77,7 +77,7 @@ const router = createRouter({
           {
             name:'rooms',
             path: 'rooms',
-            component: () =>  import('../views/academic/rooms.vue'),
+            component: () =>  import('../modules/academic/room/views/rooms.vue'),
             meta: { permissions:['room_view']}
           },
 

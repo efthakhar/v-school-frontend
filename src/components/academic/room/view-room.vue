@@ -19,7 +19,7 @@ export default{
                 {
                    room_no:'', 
                    room_name:'', 
-                   building_name:'', 
+                   building_id:'', 
                 },
     
                 room_no_error: '',

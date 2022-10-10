@@ -40,6 +40,22 @@ export const useBuildingStore = defineStore('building', {
     },
 
     actions: {
+        
+        async fetchBuildingsList(page){
+
+            return new Promise((resolve,reject)=>{
+
+                axios.get(`/api/buildings/list`)
+                .then((response) => {      
+                    this.buildings_list = response.data
+                    resolve(response)
+                })
+                .catch((errors)=>{
+                    reject(errors)
+                })
+            })
+                   
+        },
 
         async fetchBuildings(page){
 
