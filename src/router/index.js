@@ -69,9 +69,10 @@ const router = createRouter({
           {
             name:'buildings',
             path: 'buildings',
-            component: () =>  import('../views/academic/buildings.vue'),
+            component: () =>  import('../modules/academic/building/views/buildings.vue'),
             meta: { permissions:['building_view']}
           },
+          
           // room
           {
             name:'rooms',
