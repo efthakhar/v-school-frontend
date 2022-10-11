@@ -1,23 +1,24 @@
 <script setup>
 import { useAuthInfo } from '../../../../stores/authinfo';
 
-import { computed, onMounted, ref } from '@vue/runtime-core';    
+import { computed, onMounted, ref, watch } from '@vue/runtime-core';    
 import { useRoomStore } from '../store';
 
+import {useConfirmStore} from '../../../../stores/confirm'
 
 import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
 
 import AddRoom from '../components/add-room.vue';
-// import EditRoom from '../components/edit-building.vue';
-// import ViewRoom from '../components/view-building.vue';
+import EditRoom from '../components/edit-room.vue';
+import ViewRoom from '../components/view-room.vue';
+import { storeToRefs } from 'pinia';
 
-
+const confirmStore = useConfirmStore()
 const userPermissions  = useAuthInfo().getPermissions
-
 const roomStore = useRoomStore()
 
-const rooms = computed(()=> roomStore.rooms) 
+const rooms = computed(()=> roomStore.rooms ) 
 
 const editRoomSidebar = ref(false)
 const addRoomSidebar = ref(false)
@@ -37,25 +38,29 @@ async function fetchData(page){
     }
     
 }
+
 async function deleteData(id){
-
-    try{
-        
-        loading.value =  true
-        await roomStore.deleteRoom(id)
-        loading.value = false
-        
-    }catch(errors){  
-        console.log('error occured')
-        loading.value = false
-    }
-
+    roomStore.delete_room_id = id
+    confirmStore.show_box()
 }
-onMounted(()=>{
-    fetchData(1)
+
+
+watch(()=> confirmStore.do_action , (newValue, oldValue) => {
+
+  if(newValue == true)
+  {   
+      roomStore.deleteRoom(roomStore.delete_room_id)
+      confirmStore.do_action = false
+  }
+
 })
 
-function openEditRoomSidebar(id){
+onMounted(()=>{
+    fetchData(1) 
+})
+
+
+function openEditRoomSidebar(id){ 
     roomStore.edit_room_id = id
     editRoomSidebar.value = true
 }
@@ -132,7 +137,9 @@ function openViewRoomSidebar(id){
                     </div>
                 </div>     
             </div>
-            <div class="side_component_container" v-if="addRoomSidebar==true">
+            <div class="side_component_container" 
+                v-if="addRoomSidebar==true||editRoomSidebar==true||viewRoomSidebar==true"
+            >
                 
                 
                 <AddRoom
@@ -140,15 +147,17 @@ function openViewRoomSidebar(id){
                     v-if="addRoomSidebar"
                     @close="addRoomSidebar=false"
                 />
-                <!-- <editRoom
-                    @refreshData='getRooms(current_page)' 
-                    v-if="editRoomSidebar" :room_id="edit_room_id"
+                <EditRoom
+                    v-if="editRoomSidebar" 
+                    :room_id="roomStore.edit_room_id"
+                    @refreshData='fetchData(roomStore.current_page)' 
                     @close="editRoomSidebar=false" 
-                /> -->
-                <!-- <viewRoom 
-                    v-if="viewRoomSidebar" :room_id="view_room_id"
+                />
+                <ViewRoom
+                    v-if="viewRoomSidebar" 
+                    :room_id="roomStore.view_room_id"
                     @close="viewRoomSidebar=false" 
-                /> -->
+                />  
             </div>
         </div>
     

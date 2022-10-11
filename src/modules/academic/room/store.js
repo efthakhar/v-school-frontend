@@ -16,6 +16,7 @@ export const useRoomStore = defineStore('room', {
 
         edit_room_id: null,
         view_room_id: null,
+        delete_room_id: null,
 
         add_room_errors:{
             room_no:'', 
@@ -62,13 +63,13 @@ export const useRoomStore = defineStore('room', {
                    
         },
 
-        async fetchClass(id){
+        async fetchRoom(id){
             
             return new Promise((resolve,reject)=>{
 
-                axios.get(`/api/classes/${id}`)
+                axios.get(`/api/rooms/${id}`)
                 .then((response) => {   
-                    this.current_class_item = response.data
+                    this.current_room_item = response.data
                     resolve(response)
                 })
                 .catch((errors)=>{
@@ -99,7 +100,7 @@ export const useRoomStore = defineStore('room', {
                     })
                     .catch((errors)=>{
                         
-                        console.log(errors)
+                        
 
                         this.add_room_errors.room_name = 
                         Array.isArray(errors.response.data.errors.room_name)?
@@ -124,28 +125,33 @@ export const useRoomStore = defineStore('room', {
             })
                         
         },
-        async  editClass(data){   
-
+        async  editRoom(data){   
+           
             return new Promise((resolve,reject)=>{
                   
-                    axios.put(`/api/classes/${this.edit_class_id}`, data)
+                    axios.put(`/api/rooms/${this.edit_room_id}`, data)
                     .then((response) => {
-
-                        this.resetCurrentClassData()
+                       
+                        this.resetCurrentRoomData()
                         resolve(response)
 
                     })
                     .catch((errors)=>{
                         
-                        this.edit_class_errors.class_name = 
-                        Array.isArray(errors.response.data.errors.class_name)?
-                        errors.response.data.errors.class_name.join():
-                        errors.response.data.errors.class_name
+                        this.edit_room_errors.room_name = 
+                        Array.isArray(errors.response.data.errors.room_name)?
+                        errors.response.data.errors.room_name.join():
+                        errors.response.data.errors.room_name
 
-                        this.edit_class_errors.session_name = 
-                        Array.isArray(errors.response.data.errors.session_id)? 
-                        errors.response.data.errors.session_id.join('  '):
-                        errors.response.data.errors.session_id
+                        this.edit_room_errors.room_no = 
+                        Array.isArray(errors.response.data.errors.room_no)? 
+                        errors.response.data.errors.room_no.join('  '):
+                        errors.response.data.errors.room_no
+
+                        this.edit_room_errors.building_id = 
+                        Array.isArray(errors.response.data.errors.building_id)? 
+                        errors.response.data.errors.building_id.join('  '):
+                        errors.response.data.errors.building_id
                         
                         reject(errors)   
                     })
@@ -156,22 +162,20 @@ export const useRoomStore = defineStore('room', {
 
       
         async deleteRoom(id){
-
-            if(confirm("Are you sure to delete the room??")){
-
+           
                 await axios.delete(`/api/rooms/${id}`)
                 .then((response) => {
-                    
+                   
                     if(this.rooms.length==1){
                         this.current_page -=1
                         this.fetchRooms(this.current_page)
-                        
                     }else{
                         this.fetchRooms(this.current_page)
                     }
-                })       
-            }
+                })        
         },
+
+
         
         resetCurrentRoomData(){
 

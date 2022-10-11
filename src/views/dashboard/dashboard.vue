@@ -1,5 +1,5 @@
 <script setup>
-
+import {useConfirmStore}  from '../../stores/confirm'
 import { RouterLink, RouterView } from 'vue-router'
 import { sidebarStatus } from '../../stores/sidebar-status.js'
 
@@ -8,9 +8,11 @@ import Header from '../../components/header.vue';
 import NotificationsContainer from '../../components/shared/notifications-container.vue';
 
 import { computed, onMounted } from '@vue/runtime-core';
+import ConfirmBox from '../../components/shared/confirmBox.vue';
 
 const sidebar_status = sidebarStatus()
 
+const confirmStore = useConfirmStore()
 
 onMounted(()=>{
     
@@ -34,6 +36,9 @@ onMounted(()=>{
     </div>
     <div>
         <NotificationsContainer />
+    </div>
+    <div>
+        <ConfirmBox v-if="confirmStore.show_confirm_box" />
     </div>
     <div class="dashboard-content">
         <Header />
