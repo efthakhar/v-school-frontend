@@ -18,6 +18,9 @@ export const useSectionStore = defineStore('section', {
         edit_section_id: null,
         view_section_id: null,
 
+        filterSessionId: '',
+        filterClassId:'',
+
         add_section_errors:{
             section_name:'',
             class_id:'',
@@ -54,13 +57,15 @@ export const useSectionStore = defineStore('section', {
             return new Promise((resolve,reject)=>{
 
                 axios.get(`/api/sections?page=${page}&session_id=${session_id}&class_id=${class_id}`)
-                .then((response) => {      
+                .then((response) => {  
+                        
                     this.current_page = page
                     this.sections = response.data.data
                     this.total_pages = Math.ceil(response.data.total/response.data.per_page) 
                     resolve(response)
                 })
                 .catch((errors)=>{
+                    
                     reject(errors)
                 })
             })
@@ -155,23 +160,25 @@ export const useSectionStore = defineStore('section', {
         // },
 
       
-        // async deletesection(id){
+        async deleteSection(id){
 
-        //     if(confirm("Are you sure to delete the section??")){
+            if(confirm("Are you sure to delete the section??")){
 
-        //         await axios.delete(`/api/sections/${id}`)
-        //         .then((response) => {
-                    
-        //             if(this.sections.length==1){
-        //                 this.current_page -=1
-        //                 this.fetchsections(this.current_page)
+                await axios.delete(`/api/sections/${id}`)
+                .then((response) => {
+                    if(this.sections.length==1){
+                        this.current_page -=1
+                        this.fetchSections(this.current_page,this.filterSessionId,this.filterClassId)
                         
-        //             }else{
-        //                 this.fetchsections(this.current_page)
-        //             }
-        //         })       
-        //     }
-        // },
+                    }else{
+                        this.fetchSections(this.current_page,this.filterSessionId,this.filterClassId)
+                    }
+                })
+                .catch((errors)=>{
+                    console.log(errors)
+                })       
+            }
+        },
         
         // resetCurrentsectionData(){
 

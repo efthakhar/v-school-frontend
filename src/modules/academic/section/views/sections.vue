@@ -6,6 +6,7 @@ import { computed, onMounted, ref } from '@vue/runtime-core';
 import {useClassStore } from '../../class/store';
 import {useSectionStore} from '../store'
 import {useSessionStore} from '../../session/store'
+import {useConfirmStore} from '../../../../stores/confirm'
 
 // import AddClass from '../../../../modules/academic/class/components/add-class.vue';
 // import EditClass from '../../../../modules/academic/class/components/edit-class.vue';
@@ -15,6 +16,7 @@ import loader from '../../../../components/shared/loader.vue';
 
 const userPermissions  = useAuthInfo().getPermissions
 
+const confirmStore = useConfirmStore()
 const classStore   = useClassStore()
 const sectionStore = useSectionStore()
 const sessionStore = useSessionStore()
@@ -22,11 +24,11 @@ const sessionStore = useSessionStore()
 const classes  = computed(() =>  classStore.classes) 
 const classes_list  = computed(() =>  classStore.classes_list) 
 const sections = computed(() =>  sectionStore.sections) 
-const sessions = computed(() =>  sessionStore.sessions) 
-
+const sessions_list= computed(() =>  sessionStore.sessions_list) 
+/*
 let filterSessionId = ref('')
 let filterClassId = ref('')
-
+*/
 const editSectionSidebar = ref(false)
 const addSectionSidebar = ref(false)
 const viewSectionSidebar = ref(false)
@@ -48,34 +50,36 @@ async function fetchData(page){
 
 async function onSessionChange(){
         loading.value = true
-        filterClassId.value = ''
-        await classStore.fetchClassesList(filterSessionId.value)
-        await sectionStore.fetchSections(1,filterSessionId.value)
+        sectionStore.filterClassId = ''
+        await classStore.fetchClassesList(sectionStore.filterSessionId)
+        await sectionStore.fetchSections(1,sectionStore.filterSessionId)
         loading.value = false
 }
 
 async function onClassChange(){
         loading.value = true
-        await  sectionStore.fetchSections(1,filterSessionId.value,filterClassId.value)
+        await  sectionStore.fetchSections(1,sectionStore.filterSessionId,sectionStore.filterClassId)
         loading.value = false
 }
-// async function deleteData(id){
 
-//     try{
-//         loading.value =  true
-//         await sectionStore.deleteSection(id)
-//         loading.value = false
-//     }catch(errors){  
-//         console.log('error occured')
-//         loading.value = false
-//     }
 
-// }
+
+async function deleteData(id){
+   
+    try{
+        loading.value =  true
+        await sectionStore.deleteSection(id)
+        loading.value = false
+    }catch(errors){  
+        console.log('error occured')
+        loading.value = false
+    }
+
+}
 
 onMounted(()=>{
     fetchData(1)
-   // classStore.fetchClasses()
-    sessionStore.fetchSessions()
+    sessionStore.fetchSessionsList()
 })
 
 // function openEditClassSidebar(id){
@@ -99,25 +103,26 @@ onMounted(()=>{
                     add new section
                 </a> 
             </div>
-            <!-- {{filterClassId+'===='+filterSessionId}} -->
+            
             <!-- filter bar -->
             <div class="filterbar">
                 <div class="filterbar_item">
                     <select class="form-select form-select-sm inline"
-                     v-model="filterSessionId"
+                     v-model="sectionStore.filterSessionId"
                      v-on:change="onSessionChange"
                      >
                         <option value="" selected>select session</option>
                         <option :value="session.id" :key="session.id"
-                        v-for="session in sessionStore.sessions"
+                        v-for="session in sessionStore.sessions_list"
                         >{{session.session_name}}
                         </option>
                     </select>
                 </div>
-                <div class="filterbar_item" v-if="filterSessionId">
+                <div class="filterbar_item"  >
                     <select class=" form-select form-select-sm inline"
-                    v-model="filterClassId"
-                    v-on:change="onClassChange"
+                        :disabled="!sectionStore.filterSessionId"
+                        v-model="sectionStore.filterClassId"
+                        v-on:change="onClassChange"
                     >
                         <option value="" selected>select class</option>
                         <option :value="class_item.id" :key="class_item.id"
@@ -128,8 +133,6 @@ onMounted(()=>{
                 </div>
                
             </div>
-
-
 
             <div class="page-main-content">
                  
@@ -144,7 +147,8 @@ onMounted(()=>{
                                     <th class="text-right">section name</th>
                                     <th class="text-right">class name</th>
                                     <th class="text-right">session name</th>
-                                    <th class="text-right">room name</th>
+                                    <th class="text-right">building</th>
+                                    <th class="text-right">room</th>
                                     <th class="text-right">action</th>
                                 </tr>
                             </thead>
@@ -153,6 +157,8 @@ onMounted(()=>{
                                     <td class="text-right">{{section.section_name}}</td>
                                     <td class="text-right">{{section.class_name}}</td>
                                     <td class="text-right">{{section.session_name}}</td>
+                                    <td class="text-right">{{section.building_name}}</td>
+                                    <td class="text-right">{{section.room_no}}</td>
                                     <td class="text-right">
         
                                         <!-- <a class="action_btn action_edit_btn" title="edit" 
@@ -170,17 +176,18 @@ onMounted(()=>{
                                              &#128065;
                                         </a> -->
         
-                                        <!-- <span class="action_btn action_delete_btn" title="delete" 
-                                            v-if="userPermissions.includes('class_delete')"
-                                            @click="deleteData(class_item.id)"
+                                        <span class="action_btn action_delete_btn" title="delete" 
+                                            v-if="userPermissions.includes('section_delete')"
+                                            @click="deleteData(section.id)"
                                         >
                                             &#9746;
-                                        </span>  -->
+                                        </span> 
         
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <h4 class="my-4 error_txt" v-if="!sections.length>0">Opps! no result found</h4>
                         <pagination  
                             v-if="sectionStore.sections.length>0"
                             :total_pages=sectionStore.total_pages 
@@ -192,11 +199,10 @@ onMounted(()=>{
         
                 </div>
             </div>
-    
-           
-                <div class="side_component_container" 
+       
+            <div class="side_component_container" 
                     v-if=" addSectionSidebar==true || editSectionSidebar==true || viewSectionSidebar == true"
-                >
+            >
                     <!-- <AddClass 
                         v-if="addClassSidebar"
                         @close="addClassSidebar=false" 
@@ -213,7 +219,7 @@ onMounted(()=>{
                         :class_id="classStore.view_class_id"
                         @close="viewClassSidebar=false" 
                     />   -->
-                </div>
+            </div>
             
     
         </div>    

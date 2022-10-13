@@ -47,7 +47,6 @@ export const useClassStore = defineStore('class', {
 
                 axios.get(`/api/classes?session_id=${session_id}`)
                 .then((response) => { 
-                    console.log(response.data)
                     this.classes_list = response.data 
                     resolve(response)
                 })

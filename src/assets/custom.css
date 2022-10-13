@@ -106,6 +106,7 @@ input[type=checkbox] {
     margin:10px 0;
     display: flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
 }
 .filterbar_item{
     margin:2px 5px;
