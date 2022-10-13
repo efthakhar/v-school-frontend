@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios'
-import { useAuthInfo } from '../stores/authinfo'
+import { useAuthInfo } from '../../stores/authinfo'
 
 export default{
 

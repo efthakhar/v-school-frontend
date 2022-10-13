@@ -41,12 +41,28 @@ export const useClassStore = defineStore('class', {
     },
 
     actions: {
-
-        async fetchClasses(page){
+        async fetchClassesList(session_id=''){
 
             return new Promise((resolve,reject)=>{
 
-                axios.get(`/api/classes?page=${page}`)
+                axios.get(`/api/classes?session_id=${session_id}`)
+                .then((response) => { 
+                    console.log(response.data)
+                    this.classes_list = response.data 
+                    resolve(response)
+                })
+                .catch((errors)=>{
+                    reject(errors)
+                })
+            })
+                   
+        },
+
+        async fetchClasses(page,session_id=''){
+
+            return new Promise((resolve,reject)=>{
+
+                axios.get(`/api/classes?page=${page}&session_id=${session_id}`)
                 .then((response) => {      
                     this.current_page = page
                     this.classes = response.data.data

@@ -27,6 +27,11 @@ export default{
                            subnavlink:'/dashboard/classes',
                            permission:'class_view'
                         },
+                        {
+                           subnavtext:'sections',  
+                           subnavlink:'/dashboard/sections',
+                           permission:'section_view'
+                        },
                         {  subnavtext:'buildings',  
                            subnavlink:'/dashboard/buildings',
                            permission:'building_view'
@@ -35,6 +40,7 @@ export default{
                            subnavlink:'/dashboard/rooms',
                            permission:'room_view'
                         },
+                        
                     ]
                 },
                 
@@ -49,7 +55,7 @@ export default{
 <template>
 <div>
     <div class="sidebar-logo">
-        <a href="">V-SchooL</a>
+        <router-link to="/">V-SchooL</router-link>
     </div>
     <ul class="sidebar-nav-items">  
         <SideNavItem v-for="navlink in navlinks" :key="navlink"

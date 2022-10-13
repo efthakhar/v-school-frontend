@@ -3,8 +3,8 @@ import {useConfirmStore}  from '../../stores/confirm'
 import { RouterLink, RouterView } from 'vue-router'
 import { sidebarStatus } from '../../stores/sidebar-status.js'
 
-import Sidebar from '../../components/sidebar.vue';
-import Header from '../../components/header.vue';
+import Sidebar from '../../components/dashboard/sidebar.vue';
+import Header from '../../components/dashboard/header.vue';
 import NotificationsContainer from '../../components/shared/notifications-container.vue';
 
 import { computed, onMounted } from '@vue/runtime-core';
@@ -29,7 +29,9 @@ onMounted(()=>{
 <template>
 
 <div class="dashboard">
-
+    <div>
+        <ConfirmBox v-if="confirmStore.show_confirm_box" />
+    </div>
     <div class="dashboard-sidebar" 
      :class=" sidebar_status.collapsed == true ? 'dashboard-sidebar-responsive':''">
         <Sidebar/>
@@ -37,9 +39,7 @@ onMounted(()=>{
     <div>
         <NotificationsContainer />
     </div>
-    <div>
-        <ConfirmBox v-if="confirmStore.show_confirm_box" />
-    </div>
+    
     <div class="dashboard-content">
         <Header />
         

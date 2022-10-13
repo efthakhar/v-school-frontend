@@ -11,6 +11,7 @@ export const useAuthInfo = defineStore('authInfo', {
         permissions:[
          'session_create','session_view','session_update','session_delete',
          'class_create','class_view','class_update','class_delete',
+         'section_create','section_view','section_update','section_delete',
          'building_create','building_view','building_update','building_delete',
          'room_create','room_view','room_update','room_delete',
          'dashboard'
@@ -25,14 +26,14 @@ export const useAuthInfo = defineStore('authInfo', {
 
     actions: {
      
-      logout(){
-          localStorage.setItem('user', null)
-          window.location.reload(true) 
-        },
+      async  logout(){
+            localStorage.setItem('user', null)
+            window.location.reload(true) 
+      },
 
-      login(user){ 
-          localStorage.setItem('user',JSON.stringify(user) )
-          window.location.reload(true)     
+      async login(user){ 
+            localStorage.setItem('user',JSON.stringify(user) )
+            window.location.reload(true)     
       }
 
     },

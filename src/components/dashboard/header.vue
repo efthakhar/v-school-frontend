@@ -1,7 +1,7 @@
 <script>
 import axios from 'axios'    
-import { useAuthInfo } from '../stores/authinfo'    
-import { sidebarStatus } from '../stores/sidebar-status.js'
+import {useAuthInfo} from '../../stores/authinfo'
+import { sidebarStatus } from  '../../stores/sidebar-status.js'
 
 export default{
     data(){
@@ -12,18 +12,18 @@ export default{
         }
     },
     methods:{
+       
         toggleSidebar(){
             this.sidebar_status.toggleCollapse
         },
         async logout(){
-            await axios.get('http://127.0.0.1:8000/logout')
+            await axios.get('/logout')
             this.authInfo.logout()
             this.$router.push('login')
        },
     },
    
    
-    
 }
 
 </script>
@@ -49,8 +49,8 @@ export default{
     </div>   
     
     <div class="ms-auto user_info">
-        <p class="m-2">hi, 
-            {{authInfo.getAuthUser!==null?authInfo.getAuthUser.name:''}} 
+        <p class="m-2" v-if="authInfo.user">
+            hello, {{authInfo.user.name}}
         </p>
         <a @click="logout" class="btn btn-primary">logout</a>
     </div>    

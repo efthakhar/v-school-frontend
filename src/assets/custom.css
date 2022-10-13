@@ -37,15 +37,10 @@ input[type=checkbox] {
     cursor: pointer;
     transition: all .2s; 
 }
-.action_btn:hover{ 
-    /* transform: rotate(-10deg); */
-}
+
 .action_edit_btn{color: green;}
 .action_delete_btn{color: red; }
-.action_view_btn{
-    /* color: blue;  */
-    /* transform: rotate(30deg); */
-}
+
 .table {
     width: 100%;
     max-width: 100%;
@@ -104,4 +99,14 @@ input[type=checkbox] {
     .side_component_container .side_component{
         width: 100vw;
     }  
+}
+
+/* filter bar */
+.filterbar{
+    margin:10px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+.filterbar_item{
+    margin:2px 5px;
 }

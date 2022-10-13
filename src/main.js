@@ -6,7 +6,7 @@ import { useAuthInfo } from './stores/authinfo'
 import { useNotificationStore } from './stores/notifications'
 
 
-import App from './App.vue'
+import App from './views/App.vue'
 import router from './router'
 
 import './assets/main.css'
@@ -39,7 +39,7 @@ axios.interceptors.response.use(
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
   
-  ////  Prevent create,update and delete operation in demo version ////
+  //  Prevent create,update and delete operation in demo version ////
 
   //  if(config.method == "post"||config.method == "put"||config.method == "delete"){
 
@@ -47,7 +47,7 @@ axios.interceptors.request.use(function (config) {
   //     notifcationStore.pushNotification({
   //         'message':'ডেমো ভার্সনে এই ফিচারটি ব্যবহার করতে পারবেন না',
   //         'type'   :'error',
-  //         'time':9000
+  //         'time':3000
   //   })
   //   return
 

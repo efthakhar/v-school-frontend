@@ -1,5 +1,5 @@
 <script>
-import { useAuthInfo } from '../stores/authinfo';    
+import { useAuthInfo } from '../../stores/authinfo';    
 export default{
     props:{ navdetails: Object },
 

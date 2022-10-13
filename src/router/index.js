@@ -11,27 +11,20 @@ const router = createRouter({
   [
     {
       path: '/',
-      name: 'application',
-      component: () =>  import('../App.vue'),
+      name: 'home',
+      component: () =>  import('../views/Home.vue')
       
     },
-    {
-      path: '/users',
-      name: 'users',
-      component: () =>  import('../views/Users.vue'),
-      
-    },
-
     {
       path: '/register',
       name: 'register',
-      component: () =>  import('../views/register.vue'),
+      component: () =>  import('../views/auth/register.vue'),
       
     },
     {
       path: '/login',
       name: 'login',
-      component: () =>  import('../views/login.vue'),
+      component: () =>  import('../views/auth/login.vue'),
       
     },
 
@@ -48,7 +41,7 @@ const router = createRouter({
             name:'overview',
             path: 'overview',
             component: () =>  import('../views/dashboard/overview.vue'),
-            meta: { permissions:['dashboard']}
+            meta: { permissions:'dashboard'}
           },
            // session
           {
@@ -62,7 +55,14 @@ const router = createRouter({
             name:'classes',
             path: 'classes',
             component: () =>  import('../modules/academic/class/views/classes.vue'),
-            meta: { permissions:['class_view']}
+            meta: { permissions:'class_view'}
+          },
+           // section
+           {
+            name:'sections',
+            path: 'sections',
+            component: () =>  import('../modules/academic/section/views/sections.vue'),
+            meta: { permissions:'section_view'}
           },
 
           // building
@@ -70,7 +70,7 @@ const router = createRouter({
             name:'buildings',
             path: 'buildings',
             component: () =>  import('../modules/academic/building/views/buildings.vue'),
-            meta: { permissions:['building_view']}
+            meta: { permissions:'building_view'}
           },
           
           // room
@@ -78,13 +78,9 @@ const router = createRouter({
             name:'rooms',
             path: 'rooms',
             component: () =>  import('../modules/academic/room/views/rooms.vue'),
-            meta: { permissions:['room_view']}
+            meta: { permissions:'room_view'}
           },
-
-
-
-
-          
+     
           
         ],
     },
@@ -108,11 +104,18 @@ router.beforeEach(async (to, from,next) => {
         if(user)
         { 
           next({ name: 'dashboard' })
+
         }else{
+
           next()
+
         }
 
-  }else{
+  }else if( to.name == 'home'){
+
+      next()
+  }
+  else{
 
        
         if(!user)
@@ -121,6 +124,7 @@ router.beforeEach(async (to, from,next) => {
             next({ name: 'login' })
 
         }else{
+
           let required_permissions = to.meta.permissions || []
           let user_permissions = authInfo.getPermissions
          
@@ -145,7 +149,7 @@ router.beforeEach(async (to, from,next) => {
                next()
             }else{
               console.log('not_allowed')
-              next({ name: 'dashboard' })
+              next({ name: 'home' })
             }
         } 
 
