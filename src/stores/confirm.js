@@ -16,17 +16,20 @@ export const useConfirmStore = defineStore('confirm', {
 
     actions: {
      
-      confirm_action(){
+     async confirm_action(){
           this.do_action = true
           this.hide_box()
       },
-      cancel_action(){
+
+     async cancel_action(){
           this.do_action = false
           this.hide_box()
       },
+
       hide_box(){
           this.show_confirm_box = false
       },
+      
       show_box(){
            this.show_confirm_box = true
       }
