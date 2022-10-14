@@ -6,7 +6,7 @@ import { computed, onMounted, ref } from '@vue/runtime-core';
 import {useClassStore } from '../../class/store';
 import {useSectionStore} from '../store'
 import {useSessionStore} from '../../session/store'
-// import {useConfirmStore} from '../../../../stores/confirm'
+import {useConfirmStore} from '../../../../stores/confirm'
 
 // import AddClass from '../../../../modules/academic/class/components/add-class.vue';
 // import EditClass from '../../../../modules/academic/class/components/edit-class.vue';
@@ -16,7 +16,7 @@ import loader from '../../../../components/shared/loader.vue';
 
 const userPermissions  = useAuthInfo().getPermissions
 
-// const confirmStore = useConfirmStore()
+ const confirmStore = useConfirmStore()
 const classStore   = useClassStore()
 const sectionStore = useSectionStore()
 const sessionStore = useSessionStore()
@@ -61,7 +61,7 @@ async function onClassChange(){
 
 
 async function deleteData(id){
-
+    
     try{
         loading.value =  true
         await sectionStore.deleteSection(id)

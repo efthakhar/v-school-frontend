@@ -39,21 +39,13 @@ async function fetchData(page){
     
 }
 
-async function deleteData(id){
-    roomStore.delete_room_id = id
+function deleteData(id){
+   
     confirmStore.show_box()
+    .then((res)=> confirmStore.do_action==true ? 
+                  roomStore.deleteRoom(id) : '' )
 }
 
-
-watch(()=> confirmStore.do_action , (newValue, oldValue) => {
-
-  if(newValue == true)
-  {   
-      roomStore.deleteRoom(roomStore.delete_room_id)
-      confirmStore.do_action = false
-  }
-
-})
 
 onMounted(()=>{
     fetchData(1) 
