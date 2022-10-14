@@ -59,18 +59,12 @@ async function onClassChange(){
         loading.value = false
 }
 
-
-async function deleteData(id){
-    
-    try{
-        loading.value =  true
-        await sectionStore.deleteSection(id)
-        loading.value = false
-    }catch(errors){  
-        console.log('error occured')
-        loading.value = false
-    }
-
+function deleteData(id){
+   
+   confirmStore.show_box()
+   .then((res)=> confirmStore.do_action==true ? 
+   sectionStore.deleteSection(id) : '' )
+   
 }
 
 onMounted(()=>{
@@ -183,13 +177,19 @@ onMounted(()=>{
                                 </tr>
                             </tbody>
                         </table>
-                        <h4 class="my-4 error_txt" v-if="!sections.length>0">Opps! no result found</h4>
+
+                        <h4 class="my-4 error_txt" 
+                            v-if="sectionStore.sections.length<=0"
+                        >
+                            Opps! no result found
+                        </h4>
                         <pagination  
                             v-if="sectionStore.sections.length>0"
                             :total_pages=sectionStore.total_pages 
                             @pageChange='fetchData' 
                             :current_page=sectionStore.current_page
                         />
+
                         </div> 
                     </div>
         

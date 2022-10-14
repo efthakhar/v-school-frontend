@@ -60,7 +60,7 @@ export const useSectionStore = defineStore('section', {
                 .then((response) => {  
                         
                     this.current_page = page
-                    this.sections = response.data.data
+                    this.sections = response.data.data ? response.data.data : []
                     this.total_pages = Math.ceil(response.data.total/response.data.per_page) 
                     resolve(response)
                 })
@@ -162,22 +162,24 @@ export const useSectionStore = defineStore('section', {
       
         async deleteSection(id){
 
-            if(confirm("Are you sure to delete the section??")){
 
                 await axios.delete(`/api/sections/${id}`)
                 .then((response) => {
                     if(this.sections.length==1){
-                        this.current_page -=1
+                       
+                        this.current_page-=1
                         this.fetchSections(this.current_page,this.filterSessionId,this.filterClassId)
+                      
+                    }
+                    else{
                         
-                    }else{
                         this.fetchSections(this.current_page,this.filterSessionId,this.filterClassId)
                     }
                 })
                 .catch((errors)=>{
                     console.log(errors)
                 })       
-            }
+            
         },
         
         // resetCurrentsectionData(){

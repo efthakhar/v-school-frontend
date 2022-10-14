@@ -32,13 +32,7 @@ export const useConfirmStore = defineStore('confirm', {
         },
 
         hide_box(){
-
-            clearTimeout(this.wait)
-            this.wait =  setTimeout(this.resolve, 0)
-            clearInterval(this.timer)
-            
             this.show_confirm_box = false
-            return this.resolve
         },
     
         show_box(){
@@ -48,16 +42,14 @@ export const useConfirmStore = defineStore('confirm', {
                 
                 return new Promise((resolve, reject) => {
 
-                        this.resolve = resolve
-
                         this.timer = setInterval(()=>{
 
-                            this.delayTime+=1000
-                            clearTimeout(this.wait)
-                            this.wait =  setTimeout(resolve, this.delayTime)
+                            if(this.do_action==true){
+                                clearInterval(this.timer)
+                               resolve('true')
+                            }
                             
-                        },1000)
-                        
+                        },1000)                
                 })     
         }
 
