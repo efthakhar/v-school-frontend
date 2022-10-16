@@ -13,13 +13,14 @@ const class_data = computed(()=> classStore.current_class_item )
 
 async function submitData(){
 
-    try{
-        await classStore.addClass(classStore.current_class_item)
+    classStore.addClass(classStore.current_class_item)
+    .then(()=>{
         emit('refreshData')
         emit('close')
-    }catch(error){
+    })
+    .catch(error=>{
         console.log('error occured')
-    }
+    })
     
 }
 

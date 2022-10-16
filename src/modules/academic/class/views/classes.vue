@@ -1,6 +1,6 @@
 <script setup>
 import { useAuthInfo } from '../../../../stores/authinfo';
-
+import {useConfirmStore} from '../../../../stores/confirm'
 import { computed, onMounted, ref } from '@vue/runtime-core';    
 import { useClassStore } from '../store';
 import {useSessionStore} from '../../session/store'
@@ -10,7 +10,7 @@ import EditClass from '../../../../modules/academic/class/components/edit-class.
 import ViewClass from '../../../../modules/academic/class/components/view-class.vue';
 import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
-
+const confirmStore = useConfirmStore()
 const userPermissions  = useAuthInfo().getPermissions
 
 const classStore = useClassStore()
@@ -30,7 +30,7 @@ async function fetchData(page){
 
     try{
         loading.value =  true
-        await classStore.fetchClasses(page)
+        await classStore.fetchClasses(page,classStore.filter_session_id)
         loading.value = false
     }catch(errors){  
         console.log('error occured')
@@ -40,15 +40,9 @@ async function fetchData(page){
 }
 async function deleteData(id){
 
-try{
-    loading.value =  true
-    await classStore.deleteClass(id)
-    loading.value = false
-}catch(errors){  
-    console.log('error occured')
-    loading.value = false
-}
-
+   await confirmStore.show_box()
+   .then(async () =>confirmStore.do_action==true?
+   classStore.deleteClass(id):'') 
 }
 onMounted(()=>{
     sessionStore.fetchSessionsList()
@@ -57,7 +51,7 @@ onMounted(()=>{
 
 async function onSessionChange(){
     loading.value =  true
-    await classStore.fetchClasses(1,filterSessionId.value)
+    await classStore.fetchClasses(1,classStore.filter_session_id)
     loading.value =  false
 }
 
@@ -85,7 +79,7 @@ function openViewClassSidebar(id){
             <div class="filterbar">
                 <div class="filterbar_item">
                     <select class="form-select form-select-sm inline"
-                     v-model="filterSessionId"
+                     v-model="classStore.filter_session_id"
                      v-on:change="onSessionChange"
                      >
                         <option value="" selected>select session</option>
@@ -162,7 +156,7 @@ function openViewClassSidebar(id){
                     <AddClass 
                         v-if="addClassSidebar"
                         @close="addClassSidebar=false" 
-                        @refreshData='fetchData(1)' 
+                        @refreshData='fetchData(1,classStore.filter_session_id)' 
                     />      
                     <EditClass
                         v-if="editClassSidebar" 

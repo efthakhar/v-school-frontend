@@ -1,21 +1,25 @@
 
 import { defineStore } from 'pinia'
 import axios from 'axios' 
+import { useClass } from './composable/useClass'
 import { useNotificationStore } from '../../../stores/notifications'  
 
 export const useClassStore = defineStore('class', {
 
     state: () =>
      ({ 
-       
+    
         current_page:1,
         total_pages:0,
+        per_page:'',
         classes:[],
         classes_list:[],
         selected_classes:[],
 
         edit_class_id: null,
         view_class_id: null,
+
+        filter_session_id: '',
 
         add_class_errors:{
             class_name:'',
@@ -37,82 +41,53 @@ export const useClassStore = defineStore('class', {
      }),
 
     getters: {
-        getClasses: state => state.classes
+        //getClasses: state => state.classes
     },
 
     actions: {
-        async fetchClassesList(session_id=''){
 
-            return new Promise((resolve,reject)=>{
 
-                axios.get(`/api/classes?session_id=${session_id}`)
-                .then((response) => { 
-                    this.classes_list = response.data 
-                    resolve(response)
-                })
-                .catch((errors)=>{
-                    reject(errors)
-                })
+        async fetchClasses(page='',session_id=''){
+               
+           await useClass().getClasses(page,session_id)
+           .then((response)=>{
+              
+               this.classes = page ? response.data : response
+               this.per_page = page ? response.per_page : ''
+               this.current_page = page ? response.current_page : 1
+               this.total_pages = page? response.last_page : 0
             })
-                   
-        },
-
-        async fetchClasses(page,session_id=''){
-
-            return new Promise((resolve,reject)=>{
-
-                axios.get(`/api/classes?page=${page}&session_id=${session_id}`)
-                .then((response) => {      
-                    this.current_page = page
-                    this.classes = response.data.data
-                    this.total_pages = Math.ceil(response.data.total/response.data.per_page) 
-                    resolve(response)
-                })
-                .catch((errors)=>{
-                    reject(errors)
-                })
-            })
-                   
+           
+    
         },
 
         async fetchClass(id){
+
+            await useClass().getClass(id)
+            .then((response)=>{
+                this.current_class_item = response
+             })
             
-            return new Promise((resolve,reject)=>{
-
-                axios.get(`/api/classes/${id}`)
-                .then((response) => {   
-                    this.current_class_item = response.data
-                    resolve(response)
-                })
-                .catch((errors)=>{
-                    reject(errors)
-                })
-
-            })
         },
 
-        async  addClass(data){   
+        async  addClass(data){  
 
             return new Promise((resolve,reject)=>{
 
-                    axios.post(`/api/classes`, data)
-                    .then((response) => {
+                    useClass().addClass(data)
+                    .then((response)=>{
 
                         this.resetCurrentClassData()
-
                         const notifcationStore = useNotificationStore()
                         notifcationStore.pushNotification({
                             'message':'new class added successfully',
                             'type'   :'success',
                             'time':4000
                         })
-
-                        resolve(response)
-
+                        
+                        resolve()
                     })
                     .catch((errors)=>{
-                        
-                        console.log(errors)
 
                         this.add_class_errors.class_name = 
                         Array.isArray(errors.response.data.errors.class_name)?
@@ -124,14 +99,15 @@ export const useClassStore = defineStore('class', {
                         errors.response.data.errors.session_id.join('  '):
                         errors.response.data.errors.session_id
 
-                        
-
-                        reject(errors)   
+                        reject(errors)
                     })
-
-            })
+                    
+   
+            })  
                         
         },
+
+        
         async  editClass(data){   
 
             return new Promise((resolve,reject)=>{
@@ -165,20 +141,38 @@ export const useClassStore = defineStore('class', {
       
         async deleteClass(id){
 
-            if(confirm("Are you sure to delete the class??")){
-
-                await axios.delete(`/api/classes/${id}`)
-                .then((response) => {
-                    
+            return new Promise((resolve,reject)=>{
+                useClass().deleteClass(id)
+                .then(response=>{
                     if(this.classes.length==1){
                         this.current_page -=1
-                        this.fetchClasses(this.current_page)
-                        
+                        this.fetchClasses(this.current_page,this.filter_session_id)
+                                    
                     }else{
-                        this.fetchClasses(this.current_page)
+                        this.fetchClasses(this.current_page,this.filter_session_id)
                     }
-                })       
-            }
+                    resolve(response)
+                })
+                .catch(error=>{
+                    console.log(error)
+                    reject(error)
+                })
+            })
+
+            // if(confirm("Are you sure to delete the class??")){
+
+            //     await axios.delete(`/api/classes/${id}`)
+            //     .then((response) => {
+                    
+            //         if(this.classes.length==1){
+            //             this.current_page -=1
+            //             this.fetchClasses(this.current_page,this.filter_session_id)
+                        
+            //         }else{
+            //             this.fetchClasses(this.current_page,this.filter_session_id)
+            //         }
+            //     })       
+            // }
         },
         
         resetCurrentClassData(){

@@ -15,6 +15,9 @@ export const useSectionStore = defineStore('section', {
         sections_list:[],
         selected_sections:[],
 
+        editMode: false,
+        addMode: false,
+
         edit_section_id: null,
         view_section_id: null,
 
@@ -25,6 +28,7 @@ export const useSectionStore = defineStore('section', {
             section_name:'',
             class_id:'',
             session_id:'',
+            building_id: '',
             room_id:''
         },
 
@@ -32,6 +36,7 @@ export const useSectionStore = defineStore('section', {
             section_name:'',
             class_id:'',
             session_id:'',
+            building_id: '',
             room_id:''
         },
 
@@ -39,6 +44,7 @@ export const useSectionStore = defineStore('section', {
             section_name:'',
             class_id:'',
             session_id:'',
+            building_id: '',
             room_id:''
         }
 
@@ -88,47 +94,48 @@ export const useSectionStore = defineStore('section', {
         //     })
         // },
 
-        // async  addsection(data){   
+        async  addsection(data){   
 
-        //     return new Promise((resolve,reject)=>{
+            return new Promise((resolve,reject)=>{
 
-        //             axios.post(`/api/sections`, data)
-        //             .then((response) => {
+                    axios.post(`/api/sections`, data)
+                    .then((response) => {
 
-        //                 this.resetCurrentsectionData()
+                        this.resetCurrentsectionData()
 
-        //                 const notifcationStore = useNotificationStore()
-        //                 notifcationStore.pushNotification({
-        //                     'message':'new section added successfully',
-        //                     'type'   :'success',
-        //                     'time':4000
-        //                 })
+                        const notifcationStore = useNotificationStore()
+                        notifcationStore.pushNotification({
+                            'message':'new section added successfully',
+                            'type'   :'success',
+                            'time':4000
+                        })
 
-        //                 resolve(response)
+                        resolve(response)
 
-        //             })
-        //             .catch((errors)=>{
+                    })
+                    .catch((errors)=>{
                         
-        //                 console.log(errors)
+                        console.log(errors)
 
-        //                 this.add_section_errors.section_name = 
-        //                 Array.isArray(errors.response.data.errors.section_name)?
-        //                 errors.response.data.errors.section_name.join():
-        //                 errors.response.data.errors.section_name
+                        this.add_section_errors.section_name = 
+                        Array.isArray(errors.response.data.errors.section_name)?
+                        errors.response.data.errors.section_name.join():
+                        errors.response.data.errors.section_name
 
-        //                 this.add_section_errors.session_name = 
-        //                 Array.isArray(errors.response.data.errors.session_id)? 
-        //                 errors.response.data.errors.session_id.join('  '):
-        //                 errors.response.data.errors.session_id
+                        this.add_section_errors.session_name = 
+                        Array.isArray(errors.response.data.errors.session_id)? 
+                        errors.response.data.errors.session_id.join('  '):
+                        errors.response.data.errors.session_id
 
                         
 
-        //                 reject(errors)   
-        //             })
+                        reject(errors)   
+                    })
 
-        //     })
+            })
                         
-        // },
+        },
+        
         // async  editsection(data){   
 
         //     return new Promise((resolve,reject)=>{

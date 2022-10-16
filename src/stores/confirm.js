@@ -9,9 +9,7 @@ export const useConfirmStore = defineStore('confirm', {
         do_action: false,
         show_confirm_box:false,
         resolve:null,
-        delayTime: 0,
-        timer:'',
-        wait:''
+       
      }),
 
     getters: {
@@ -20,7 +18,7 @@ export const useConfirmStore = defineStore('confirm', {
 
     actions: 
     {
-     
+    
         async confirm_action(){
             this.do_action = true
             this.hide_box()
@@ -32,25 +30,17 @@ export const useConfirmStore = defineStore('confirm', {
         },
 
         hide_box(){
+            this.resolve()
             this.show_confirm_box = false
         },
     
-        show_box(){
+      async  show_box(){
                 
                 this.show_confirm_box = true 
                 this.do_action = false
-                
                 return new Promise((resolve, reject) => {
-
-                        this.timer = setInterval(()=>{
-
-                            if(this.do_action==true){
-                                clearInterval(this.timer)
-                               resolve('true')
-                            }
-                            
-                        },1000)                
-                })     
+                     this.resolve = resolve
+                })
         }
 
     },

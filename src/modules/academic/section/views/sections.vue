@@ -2,13 +2,13 @@
 import { useAuthInfo } from '../../../../stores/authinfo';
 
 import { computed, onMounted, ref } from '@vue/runtime-core';    
-
-import {useClassStore } from '../../class/store';
+import {useClass} from '../../class/composable/useClass'
+//import {useClassStore } from '../../class/store';
 import {useSectionStore} from '../store'
 import {useSessionStore} from '../../session/store'
 import {useConfirmStore} from '../../../../stores/confirm'
 
-// import AddClass from '../../../../modules/academic/class/components/add-class.vue';
+import AddSectionSidebar from '../../../../modules/academic/section/components/add-section.vue';
 // import EditClass from '../../../../modules/academic/class/components/edit-class.vue';
 // import ViewClass from '../../../../modules/academic/class/components/view-class.vue';
 import pagination from '../../../../components/shared/pagination.vue';
@@ -16,13 +16,15 @@ import loader from '../../../../components/shared/loader.vue';
 
 const userPermissions  = useAuthInfo().getPermissions
 
- const confirmStore = useConfirmStore()
-const classStore   = useClassStore()
+const confirmStore = useConfirmStore()
+
 const sectionStore = useSectionStore()
 const sessionStore = useSessionStore()
 
-const classes  = computed(() =>  classStore.classes) 
-const classes_list  = computed(() =>  classStore.classes_list) 
+
+const {classes, getClasses}   = useClass()
+
+
 const sections = computed(() =>  sectionStore.sections) 
 const sessions_list= computed(() =>  sessionStore.sessions_list) 
 
@@ -48,14 +50,15 @@ async function fetchData(page){
 async function onSessionChange(){
         loading.value = true
         sectionStore.filterClassId = ''
-        await classStore.fetchClassesList(sectionStore.filterSessionId)
+        await getClasses('',sectionStore.filterSessionId)
         await sectionStore.fetchSections(1,sectionStore.filterSessionId)
         loading.value = false
 }
 
 async function onClassChange(){
         loading.value = true
-        await  sectionStore.fetchSections(1,sectionStore.filterSessionId,sectionStore.filterClassId)
+        await sectionStore.fetchSections(1,sectionStore.filterSessionId,sectionStore.filterClassId)
+        //await  sectionStore.fetchSections(1,sectionStore.filterSessionId,sectionStore.filterClassId)
         loading.value = false
 }
 
@@ -81,7 +84,10 @@ onMounted(()=>{
 //     viewClassSidebar.value = true
 // }
 
-
+function openAddSectionSidebar(){
+    addSectionSidebar.value=true
+    sectionStore.addMode = true
+}
 </script>
     
 <template>
@@ -89,7 +95,7 @@ onMounted(()=>{
         <div class="page-view">
             <div class="page-top-nav">
                 <h4 class="blue-txt">All Sections</h4>
-                <a class="btn btn-primary btn-sm ms-auto" @click="addSectionSidebar=true" >
+                <a class="btn btn-primary btn-sm ms-auto" @click="openAddSectionSidebar" >
                     add new section
                 </a> 
             </div>
@@ -116,7 +122,7 @@ onMounted(()=>{
                     >
                         <option value="" selected>select class</option>
                         <option :value="class_item.id" :key="class_item.id"
-                        v-for="class_item in classStore.classes_list"
+                        v-for="class_item in classes"
                         >{{class_item.class_name}}
                         </option>
                     </select>
@@ -199,11 +205,11 @@ onMounted(()=>{
             <div class="side_component_container" 
                     v-if=" addSectionSidebar==true || editSectionSidebar==true || viewSectionSidebar == true"
             >
-                    <!-- <AddClass 
-                        v-if="addClassSidebar"
-                        @close="addClassSidebar=false" 
+                    <AddSectionSidebar 
+                        v-if="addSectionSidebar"
+                        @close="addSectionSidebar=false" 
                         @refreshData='fetchData(1)' 
-                    />       -->
+                    />      
                     <!-- <EditClass
                         v-if="editClassSidebar" 
                         :class_id="classStore.edit_class_id"
