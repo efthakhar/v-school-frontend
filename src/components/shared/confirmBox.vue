@@ -15,10 +15,12 @@ const confirmStore = useConfirmStore()
         <div class="confirm_box alert" >
 
         <p>
-        Are you sure to delete this item ?
+        {{confirmStore.message}}
         </p>
-        <a class="btn btn-sm btn-danger me-2" @click="confirmStore.confirm_action()">yes</a>
-        <a class="btn btn-sm btn-primary"     @click="confirmStore.cancel_action()">cancel</a>
+       <div>
+        <a class="btn  btn-danger me-2" @click="confirmStore.confirm_action()">yes</a>
+        <a class="btn  btn-primary"     @click="confirmStore.cancel_action()">cancel</a>
+       </div>
         </div>
     </div>
 </div>
@@ -34,15 +36,21 @@ const confirmStore = useConfirmStore()
     height: 100vh;
     background-color:rgba(0, 0, 0, 0.315);
     z-index:1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .confirm_box{
     background-color: white;
     box-shadow: 1px 1px 12px grey;
-    position: absolute;
-    top:30%;
-    left:calc(50% - 150px) ;
-    max-width:400px;
-    min-height: 100px;
+    text-align: center;
+    width:400px;
+    max-width: 100vw;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
     z-index:1000;
 }    

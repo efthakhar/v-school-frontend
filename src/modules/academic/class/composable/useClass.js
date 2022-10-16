@@ -58,16 +58,27 @@ export function useClass() {
          })
     }
 
+
+    const editClass = async (data,id)=> {
+
+         return new Promise((resolve,reject)=>{
+             axios.put(`/api/classes/${id}`, data)
+            .then((response) => {
+              resolve(response)
+            })
+            .catch(error=>reject(error))
+            
+         })
+    }
+
     const deleteClass = async (id) => {
 
         return new Promise((resolve, reject) => {
                   axios.delete(`/api/classes/${id}`)
-                  .then((response) => {
-                    // console.log(response)
+                  .then((response) => {  
                     resolve(response)
                   })
                   .catch(error=>{
-                    // console.log(error)
                     reject(error)
                   })
         })
@@ -77,6 +88,6 @@ export function useClass() {
        
   
 
-    return { classes, error, getClasses, getClass, addClass, deleteClass}
+    return { classes, error, getClasses, getClass, addClass, editClass, deleteClass}
 
 }

@@ -6,9 +6,11 @@ export const useConfirmStore = defineStore('confirm', {
 
     state: () =>
      ({ 
+        message:'Are you sure to do this action???',
         do_action: false,
         show_confirm_box:false,
         resolve:null,
+
        
      }),
 
@@ -34,8 +36,8 @@ export const useConfirmStore = defineStore('confirm', {
             this.show_confirm_box = false
         },
     
-      async  show_box(){
-                
+      async  show_box(data={}){
+                this.message = data.message ? data.message : this.message
                 this.show_confirm_box = true 
                 this.do_action = false
                 return new Promise((resolve, reject) => {

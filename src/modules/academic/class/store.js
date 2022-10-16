@@ -107,20 +107,25 @@ export const useClassStore = defineStore('class', {
                         
         },
 
-        
-        async  editClass(data){   
+        async  editClass(data){  
 
             return new Promise((resolve,reject)=>{
-                  
-                    axios.put(`/api/classes/${this.edit_class_id}`, data)
-                    .then((response) => {
+
+                    useClass().editClass(data,this.edit_class_id)
+                    .then((response)=>{
 
                         this.resetCurrentClassData()
-                        resolve(response)
-
+                        const notifcationStore = useNotificationStore()
+                        notifcationStore.pushNotification({
+                            'message':'class edited successfully',
+                            'type'   :'success',
+                            'time':4000
+                        })
+                        
+                        resolve()
                     })
                     .catch((errors)=>{
-                        
+
                         this.edit_class_errors.class_name = 
                         Array.isArray(errors.response.data.errors.class_name)?
                         errors.response.data.errors.class_name.join():
@@ -130,14 +135,14 @@ export const useClassStore = defineStore('class', {
                         Array.isArray(errors.response.data.errors.session_id)? 
                         errors.response.data.errors.session_id.join('  '):
                         errors.response.data.errors.session_id
-                        
-                        reject(errors)   
-                    })
 
-            })
+                        reject(errors)
+                    })
+                    
+   
+            })  
                         
         },
-
       
         async deleteClass(id){
 
@@ -159,20 +164,6 @@ export const useClassStore = defineStore('class', {
                 })
             })
 
-            // if(confirm("Are you sure to delete the class??")){
-
-            //     await axios.delete(`/api/classes/${id}`)
-            //     .then((response) => {
-                    
-            //         if(this.classes.length==1){
-            //             this.current_page -=1
-            //             this.fetchClasses(this.current_page,this.filter_session_id)
-                        
-            //         }else{
-            //             this.fetchClasses(this.current_page,this.filter_session_id)
-            //         }
-            //     })       
-            // }
         },
         
         resetCurrentClassData(){
