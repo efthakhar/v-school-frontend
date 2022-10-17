@@ -7,12 +7,16 @@ export default{
 
 <template>
     <div class="loader_container">
-        <div class="lds-hourglass"></div>
+        <div class="lds-hourglass"></div>     
     </div>
 </template>
 
 
 <style>
+
+
+/* ==================================================== */
+
 .loader_container{ 
     width: 100%;
     display: flex;

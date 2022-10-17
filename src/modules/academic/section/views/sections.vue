@@ -1,9 +1,9 @@
 <script setup>
 import { useAuthInfo } from '../../../../stores/authinfo';
-
 import { computed, onMounted, ref } from '@vue/runtime-core';    
 import {useClass} from '../../class/composable/useClass'
-//import {useClassStore } from '../../class/store';
+
+
 import {useSectionStore} from '../store'
 import {useSessionStore} from '../../session/store'
 import {useConfirmStore} from '../../../../stores/confirm'
@@ -17,7 +17,6 @@ import loader from '../../../../components/shared/loader.vue';
 const userPermissions  = useAuthInfo().getPermissions
 
 const confirmStore = useConfirmStore()
-
 const sectionStore = useSectionStore()
 const sessionStore = useSessionStore()
 
@@ -25,8 +24,7 @@ const sessionStore = useSessionStore()
 const {classes, getClasses}   = useClass()
 
 
-const sections = computed(() =>  sectionStore.sections) 
-const sessions_list= computed(() =>  sessionStore.sessions_list) 
+// const sections = computed(() =>  sectionStore.sections) 
 
 const editSectionSidebar = ref(false)
 const addSectionSidebar = ref(false)
@@ -34,11 +32,11 @@ const viewSectionSidebar = ref(false)
 
 const loading = ref(false)
 
-async function fetchData(page){
+async function fetchData(page='',session_id='',class_id=''){
 
     try{
         loading.value =  true
-        await sectionStore.fetchSections(page)
+        await sectionStore.fetchSections(page,session_id,class_id)
         loading.value = false
     }catch(errors){  
         console.log('error occured')
@@ -58,7 +56,6 @@ async function onSessionChange(){
 async function onClassChange(){
         loading.value = true
         await sectionStore.fetchSections(1,sectionStore.filterSessionId,sectionStore.filterClassId)
-        //await  sectionStore.fetchSections(1,sectionStore.filterSessionId,sectionStore.filterClassId)
         loading.value = false
 }
 
@@ -75,7 +72,7 @@ onMounted(()=>{
     sessionStore.fetchSessionsList()
 })
 
-// function openEditClassSidebar(id){
+// function openEditSectionSidebar(id){
 //     classStore.edit_class_id = id
 //     editClassSidebar.value = true
 // }
@@ -143,18 +140,18 @@ function openAddSectionSidebar(){
                                     <th class="text-right">section name</th>
                                     <th class="text-right">class name</th>
                                     <th class="text-right">session name</th>
-                                    <th class="text-right">building</th>
-                                    <th class="text-right">room</th>
+                                    <!-- <th class="text-right">building</th>
+                                    <th class="text-right">room</th> -->
                                     <th class="text-right">action</th>
                                 </tr>
                             </thead>
                             <tbody >
-                                <tr v-for="section in sections" :key="section.id">
+                                <tr v-for="section in sectionStore.sections" :key="section.id">
                                     <td class="text-right">{{section.section_name}}</td>
                                     <td class="text-right">{{section.class_name}}</td>
                                     <td class="text-right">{{section.session_name}}</td>
-                                    <td class="text-right">{{section.building_name}}</td>
-                                    <td class="text-right">{{section.room_no}}</td>
+                                    <!-- <td class="text-right">{{section.building_name}}</td>
+                                    <td class="text-right">{{section.room_no}}</td> -->
                                     <td class="text-right">
         
                                         <!-- <a class="action_btn action_edit_btn" title="edit" 
@@ -164,13 +161,13 @@ function openAddSectionSidebar(){
                                             &#9998;
                                         </a> -->
                                         
-                                        <!-- <a class="action_btn action_view_btn" 
+                                        <a class="action_btn action_view_btn" 
                                            title="view" 
-                                           v-if="userPermissions.includes('class_view')"
-                                           @click="openViewClassSidebar(class_item.id)"
+                                           v-if="userPermissions.includes('section_view')"
+                                           @click="openViewClassSidebar(section.id)"
                                         >          
                                              &#128065;
-                                        </a> -->
+                                        </a>
         
                                         <span class="action_btn action_delete_btn" title="delete" 
                                             v-if="userPermissions.includes('section_delete')"
@@ -208,7 +205,7 @@ function openAddSectionSidebar(){
                     <AddSectionSidebar 
                         v-if="addSectionSidebar"
                         @close="addSectionSidebar=false" 
-                        @refreshData='fetchData(1)' 
+                        @refreshData='fetchData(1,sectionStore.filterSessionId,sectionStore.filterClassId)' 
                     />      
                     <!-- <EditClass
                         v-if="editClassSidebar" 

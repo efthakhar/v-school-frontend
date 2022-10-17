@@ -10,6 +10,7 @@ import EditClass from '../../../../modules/academic/class/components/edit-class.
 import ViewClass from '../../../../modules/academic/class/components/view-class.vue';
 import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
+
 const confirmStore = useConfirmStore()
 const userPermissions  = useAuthInfo().getPermissions
 

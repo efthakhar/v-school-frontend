@@ -23,21 +23,21 @@ const roomStore      = useRoomStore()
 
 const section_data = computed(()=> sectionStore.current_section_item )
 
-// async function submitData(){
+async function submitData(){
 
-//     try{
-//         await classStore.addClass(classStore.current_class_item)
-//         emit('refreshData')
-//         emit('close')
-//     }catch(error){
-//         console.log('error occured')
-//     }
+    try{
+        await sectionStore.addSection(sectionStore.current_section_item)
+        emit('refreshData')
+        emit('close')
+    }catch(error){
+        console.log('error occured')
+    }
     
-// }
+}
 
 
 async function closeAddSectionSidebar(){
-   // classStore.resetCurrentClassData()
+    sectionStore.resetCurrentsectionData()
     emit('close')
 }
 
@@ -87,7 +87,7 @@ onMounted(()=>{
                     
                 </div>
 
-                {{section_data.session_id}}
+                
                 <!-- class name -->
                 <div class="form_item " v-if="section_data.session_id">
                     <label class="my-2">class</label>

@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios' 
 import { useNotificationStore } from '../../../stores/notifications'  
+import { useSection } from './composable/useSection'
 
 
 export const useSectionStore = defineStore('section', {
@@ -57,17 +58,60 @@ export const useSectionStore = defineStore('section', {
 
     actions: {
 
-        async fetchSections(page,session_id='',class_id=''){
+        async  addSection(data){  
+
+            return new Promise((resolve,reject)=>{
+
+                    useSection().addSection(data)
+                    .then((response)=>{
+
+                        this.resetCurrentsectionData()
+                        const notifcationStore = useNotificationStore()
+                        notifcationStore.pushNotification({
+                            'message':'new section added successfully',
+                            'type'   :'success',
+                            'time':4000
+                        })
+                        
+                        resolve()
+                    })
+                    .catch((errors)=>{
+
+                        this.add_section_errors.class_name = 
+                            Array.isArray(errors.response.data.errors.class_name)?
+                            errors.response.data.errors.class_name.join():
+                            errors.response.data.errors.class_name
+
+                        this.add_section_errors.session_id = 
+                            Array.isArray(errors.response.data.errors.session_id)? 
+                            errors.response.data.errors.session_id.join('  '):
+                            errors.response.data.errors.session_id
+
+                        this.add_section_errors.class_id = 
+                            Array.isArray(errors.response.data.errors.class_id)? 
+                            errors.response.data.errors.class_id.join('  '):
+                            errors.response.data.errors.class_id
+
+                        reject(errors)
+                    })
+                    
+   
+            })  
+                        
+        },
+
+        async fetchSections(page ='',session_id='',class_id=''){
 
 
             return new Promise((resolve,reject)=>{
 
-                axios.get(`/api/sections?page=${page}&session_id=${session_id}&class_id=${class_id}`)
-                .then((response) => {  
-                        
-                    this.current_page = page
-                    this.sections = response.data.data ? response.data.data : []
-                    this.total_pages = Math.ceil(response.data.total/response.data.per_page) 
+                useSection().getSections(page,session_id,class_id)
+                .then((response) => { 
+                    
+                    this.per_page = page ? response.per_page : ''
+                    this.current_page = page ? response.current_page : 1
+                    this.total_pages = page? response.last_page : 0
+                    this.sections = page ? response.data : response   
                     resolve(response)
                 })
                 .catch((errors)=>{
@@ -78,128 +122,57 @@ export const useSectionStore = defineStore('section', {
                    
         },
 
-        // async fetchsection(id){
+        async fetchsection(id){
             
-        //     return new Promise((resolve,reject)=>{
-
-        //         axios.get(`/api/sections/${id}`)
-        //         .then((response) => {   
-        //             this.current_section_item = response.data
-        //             resolve(response)
-        //         })
-        //         .catch((errors)=>{
-        //             reject(errors)
-        //         })
-
-        //     })
-        // },
-
-        async  addsection(data){   
-
             return new Promise((resolve,reject)=>{
 
-                    axios.post(`/api/sections`, data)
-                    .then((response) => {
-
-                        this.resetCurrentsectionData()
-
-                        const notifcationStore = useNotificationStore()
-                        notifcationStore.pushNotification({
-                            'message':'new section added successfully',
-                            'type'   :'success',
-                            'time':4000
-                        })
-
-                        resolve(response)
-
-                    })
-                    .catch((errors)=>{
-                        
-                        console.log(errors)
-
-                        this.add_section_errors.section_name = 
-                        Array.isArray(errors.response.data.errors.section_name)?
-                        errors.response.data.errors.section_name.join():
-                        errors.response.data.errors.section_name
-
-                        this.add_section_errors.session_name = 
-                        Array.isArray(errors.response.data.errors.session_id)? 
-                        errors.response.data.errors.session_id.join('  '):
-                        errors.response.data.errors.session_id
-
-                        
-
-                        reject(errors)   
-                    })
+                useSection().getSection(id)
+                .then((response) => {   
+                    this.current_section_item = response.data
+                    resolve(response)
+                })
+                .catch((errors)=>{
+                    reject(errors)
+                })
 
             })
-                        
         },
+
+
         
-        // async  editsection(data){   
-
-        //     return new Promise((resolve,reject)=>{
-                  
-        //             axios.put(`/api/sections/${this.edit_section_id}`, data)
-        //             .then((response) => {
-
-        //                 this.resetCurrentsectionData()
-        //                 resolve(response)
-
-        //             })
-        //             .catch((errors)=>{
-                        
-        //                 this.edit_section_errors.section_name = 
-        //                 Array.isArray(errors.response.data.errors.section_name)?
-        //                 errors.response.data.errors.section_name.join():
-        //                 errors.response.data.errors.section_name
-
-        //                 this.edit_section_errors.session_name = 
-        //                 Array.isArray(errors.response.data.errors.session_id)? 
-        //                 errors.response.data.errors.session_id.join('  '):
-        //                 errors.response.data.errors.session_id
-                        
-        //                 reject(errors)   
-        //             })
-
-        //     })
-                        
-        // },
 
       
         async deleteSection(id){
 
-
-                await axios.delete(`/api/sections/${id}`)
+            return new Promise((resolve,reject)=>{
+                useSection().deleteSection(id)
                 .then((response) => {
-                    if(this.sections.length==1){
-                       
+                    if(this.sections.length==1){           
                         this.current_page-=1
-                        this.fetchSections(this.current_page,this.filterSessionId,this.filterClassId)
-                      
+                        this.fetchSections(this.current_page,this.filterSessionId,this.filterClassId)                  
                     }
-                    else{
-                        
+                    else{     
                         this.fetchSections(this.current_page,this.filterSessionId,this.filterClassId)
                     }
+                    resolve(response)
                 })
-                .catch((errors)=>{
-                    console.log(errors)
-                })       
-            
+                .catch((errors)=>reject(errors))       
+            })
         },
         
-        // resetCurrentsectionData(){
+        resetCurrentsectionData(){
 
-        //     this.current_section_item = {
-        //         section_name:'',
-        //         session_id:'',
-        //         session_name:''
-        //     }
-        //     this.add_section_errors = []
-        //     this.edit_section_errors = []
+            this.current_section_item = {
+                section_name:'',
+                class_id:'',
+                session_id:'',
+                building_id: '',
+                room_id:''
+            }
+            this.add_section_errors = []
+            this.edit_section_errors = []
 
-        // },
+        },
 
 
     },

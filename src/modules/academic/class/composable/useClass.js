@@ -1,10 +1,11 @@
 import { ref } from 'vue'
 import axios from 'axios' 
+
 export function useClass() {
 
     const classes = ref(null)
     const class_item = ref(null)
-    const error = ref(null)
+
 
     const getClasses = async (page='',session_id='')=>{
       
@@ -12,7 +13,7 @@ export function useClass() {
                   
           axios.get(`/api/classes?page=${page}&session_id=${session_id}`)
           .then((response) => {    
-           
+            
             classes.value = response.data
             resolve(classes.value)
               
@@ -46,29 +47,28 @@ export function useClass() {
 
     const addClass = async (data)=> {
 
-         return new Promise((resolve,reject)=>{
+          return new Promise((resolve,reject)=>{
 
-             axios.post(`/api/classes`, data)
+              axios.post(`/api/classes`, data)
             .then((response) => {
               resolve(response)
-              // return response
             })
             .catch(error=>reject(error))
             
-         })
+          })
     }
 
 
     const editClass = async (data,id)=> {
 
-         return new Promise((resolve,reject)=>{
-             axios.put(`/api/classes/${id}`, data)
+          return new Promise((resolve,reject)=>{
+              axios.put(`/api/classes/${id}`, data)
             .then((response) => {
               resolve(response)
             })
             .catch(error=>reject(error))
             
-         })
+          })
     }
 
     const deleteClass = async (id) => {
@@ -82,12 +82,10 @@ export function useClass() {
                     reject(error)
                   })
         })
-                       
+                        
     }
 
-       
-  
 
-    return { classes, error, getClasses, getClass, addClass, editClass, deleteClass}
+    return { classes,class_item, getClasses, getClass, addClass, editClass, deleteClass}
 
 }
