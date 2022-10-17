@@ -15,12 +15,14 @@ const sessionStore   = useSessionStore()
 const sectionStore   = useSectionStore()
 
 
-const section_data = computed(()=> sectionStore.current_section_item )
+// const section_data = computed(()=> sectionStore.current_section_item )
 
 async  function fetchData(id){
     
     loading.value = true
     await sectionStore.fetchsection(id)
+    await sessionStore.fetchSessionsList()
+    await getClasses('', sectionStore.current_section_item.session_id)
     loading.value = false
 }
 
@@ -42,18 +44,14 @@ async function closeEditSectionSidebar(){
     sectionStore.resetCurrentsectionData()
     emit('close')
 }
-
+function onSessionChange(){
+    sectionStore.current_section_item.class_id = ''
+    getClasses('',sectionStore.current_section_item.session_id)
+}
 onMounted(()=>{
     
-   getClasses().then(()=>{
-     
-   })
-    
     fetchData(props.section_id)
-    .then(()=>{
-       sessionStore.fetchSessionsList()
-       .then(()=> getClasses('', section_data.session_id))
-    })
+    
 })
 </script>
     
@@ -73,7 +71,10 @@ onMounted(()=>{
                     >
                         {{sectionStore.edit_section_errors.section_name}}
                     </p>
-                    <input type="text" class="form-control" v-model="section_data.section_name">
+                    <input type="text"
+                          class="form-control" 
+                          v-model="sectionStore.current_section_item.section_name"
+                    >
                 </div>
 
                 <!-- session name -->
@@ -84,8 +85,9 @@ onMounted(()=>{
                     >
                         {{sectionStore.edit_section_errors.session_id}}
                     </p>
-                    <select  class="form-control" v-model="section_data.session_id"
-                             v-on:change="getClasses('',section_data.session_id)"
+                    <select  class="form-control"
+                             v-model="sectionStore.current_section_item.session_id"
+                             v-on:change="onSessionChange"
                     >
                         <option value="">select session</option>
                         <option :value="session.id"
@@ -100,14 +102,16 @@ onMounted(()=>{
 
                 
                 <!-- class name -->
-                <div class="form_item " v-if="section_data.session_id">
+                <div class="form_item " v-if="sectionStore.current_section_item.session_id">
                     <label class="my-2">class</label>
                     <p class="error_txt" 
                     v-if="sectionStore.edit_section_errors.class_id"
                     >
                         {{sectionStore.edit_section_errors.class_id}}
                     </p>
-                    <select  class="form-control" v-model="section_data.class_id">
+                    
+                    <select  class="form-control"
+                     v-model="sectionStore.current_section_item.class_id">
                         <option value="">select class</option>
                         <option :value="c.id"
                                  v-for="c in classes"

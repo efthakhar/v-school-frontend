@@ -208,7 +208,7 @@ function openAddSectionSidebar(){
                     <EditSectionSIdebar
                         v-if="editSectionSidebar" 
                         :section_id="sectionStore.edit_section_id"
-                        @refreshData='fetchData(sectionStore.current_page)' 
+                        @refreshData='fetchData(1,sectionStore.filterSessionId,sectionStore.filterClassId)' 
                         @close="editSectionSidebar=false" 
                     />
                     <!-- <ViewClass
