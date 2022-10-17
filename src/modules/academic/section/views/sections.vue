@@ -10,7 +10,8 @@ import {useConfirmStore} from '../../../../stores/confirm'
 
 import AddSectionSidebar from '../../../../modules/academic/section/components/add-section.vue';
 import EditSectionSIdebar from '../../../../modules/academic/section/components/edit-section.vue';
-// import ViewClass from '../../../../modules/academic/class/components/view-class.vue';
+import ViewSectionSidebar from '../../../../modules/academic/section/components/view-section.vue';
+
 import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
 
@@ -74,10 +75,10 @@ function openEditSectionSidebar(id){
     sectionStore.edit_section_id = id
     editSectionSidebar.value = true
 }
-// function openViewClassSidebar(id){
-//     classStore.view_class_id = id
-//     viewClassSidebar.value = true
-// }
+function openViewClassSidebar(id){
+    sectionStore.view_section_id = id
+    viewSectionSidebar.value = true
+}
 
 function openAddSectionSidebar(){
     addSectionSidebar.value=true
@@ -211,11 +212,11 @@ function openAddSectionSidebar(){
                         @refreshData='fetchData(1,sectionStore.filterSessionId,sectionStore.filterClassId)' 
                         @close="editSectionSidebar=false" 
                     />
-                    <!-- <ViewClass
-                        v-if="viewClassSidebar" 
-                        :class_id="classStore.view_class_id"
-                        @close="viewClassSidebar=false" 
-                    />   -->
+                    <ViewSectionSidebar
+                        v-if="viewSectionSidebar" 
+                        :section_id="sectionStore.view_section_id"
+                        @close="viewSectionSidebar=false" 
+                    />  
             </div>
             
     

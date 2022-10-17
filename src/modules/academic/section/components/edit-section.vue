@@ -14,9 +14,6 @@ const {classes, getClasses}   = useClass()
 const sessionStore   = useSessionStore()
 const sectionStore   = useSectionStore()
 
-
-// const section_data = computed(()=> sectionStore.current_section_item )
-
 async  function fetchData(id){
     
     loading.value = true
