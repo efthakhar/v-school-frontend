@@ -72,7 +72,7 @@ onMounted(()=>{
                     </p>
                     <select  class="form-control" v-model="class_data.session_id">
                         <option value="">select a session</option>
-                        <option :value="session.id"
+                        <option  :value="session.id"
                                  v-for="session in sessionStore.sessions_list"
                                  :key="session.id"
                         >

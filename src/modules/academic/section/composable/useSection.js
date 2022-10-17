@@ -29,15 +29,15 @@ export function useSection() {
     const getSection = async (section_id)=>{
       
       return  new   Promise((resolve,reject)=>{
-                  
+          
           axios.get(`/api/sections/${section_id}`)
-          .then((response) => {    
-            
+          .then((response) => {   
             section_item.value = response.data
             resolve(section_item.value)
               
           })
           .catch((errors)=>{
+            
             reject(errors)
           })
           
@@ -57,17 +57,16 @@ export function useSection() {
     }
 
 
-    // const editSection = async (data,id)=> {
-
-    //       return new Promise((resolve,reject)=>{
-    //           axios.put(`/api/Sections/${id}`, data)
-    //         .then((response) => {
-    //           resolve(response)
-    //         })
-    //         .catch(error=>reject(error))
+    const editSection = async (data,id)=> {
+         
+          return new Promise( (resolve,reject) =>{
             
-    //       })
-    // }
+              axios.put(`/api/sections/${id}`, data)
+              .then((response) => resolve(response))
+              .catch(error=>reject(error))
+            
+          })
+    }
 
     const deleteSection = async (id) => {
 
@@ -79,7 +78,6 @@ export function useSection() {
     }
 
 
-   // return { Sections,Section_item, getSections, getSection, addSection, editSection, deleteSection}
-    return { sections, section_item, getSections,getSection, addSection, deleteSection}
+    return { sections, section_item, getSections,getSection, addSection, deleteSection,editSection}
 
 }

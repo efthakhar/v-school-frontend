@@ -77,10 +77,10 @@ export const useSectionStore = defineStore('section', {
                     })
                     .catch((errors)=>{
 
-                        this.add_section_errors.class_name = 
-                            Array.isArray(errors.response.data.errors.class_name)?
-                            errors.response.data.errors.class_name.join():
-                            errors.response.data.errors.class_name
+                        this.add_section_errors.section_name = 
+                            Array.isArray(errors.response.data.errors.section_name)?
+                            errors.response.data.errors.section_name.join():
+                            errors.response.data.errors.section_name
 
                         this.add_section_errors.session_id = 
                             Array.isArray(errors.response.data.errors.session_id)? 
@@ -99,6 +99,48 @@ export const useSectionStore = defineStore('section', {
             })  
                         
         },
+        async  editSection(data){  
+            
+            return new Promise((resolve,reject)=>{
+
+                    useSection().editSection(data,this.edit_section_id)
+                    .then((response)=>{
+                       
+                        this.resetCurrentsectionData()
+                        const notifcationStore = useNotificationStore()
+                        notifcationStore.pushNotification({
+                            'message':'section updated successfully',
+                            'type'   :'success',
+                            'time':4000
+                        })
+                        
+                        resolve()
+                    })
+                    .catch((errors)=>{
+                       
+                        this.edit_section_errors.section_name = 
+                            Array.isArray(errors.response.data.errors.section_name)?
+                            errors.response.data.errors.section_name.join():
+                            errors.response.data.errors.section_name
+
+                        this.edit_section_errors.session_id = 
+                            Array.isArray(errors.response.data.errors.session_id)? 
+                            errors.response.data.errors.session_id.join('  '):
+                            errors.response.data.errors.session_id
+
+                        this.edit_section_errors.class_id = 
+                            Array.isArray(errors.response.data.errors.class_id)? 
+                            errors.response.data.errors.class_id.join('  '):
+                            errors.response.data.errors.class_id
+
+                        reject(errors)
+                    })
+                    
+   
+            })  
+                        
+        },
+
 
         async fetchSections(page ='',session_id='',class_id=''){
 
@@ -125,22 +167,15 @@ export const useSectionStore = defineStore('section', {
         async fetchsection(id){
             
             return new Promise((resolve,reject)=>{
-
+                
                 useSection().getSection(id)
                 .then((response) => {   
-                    this.current_section_item = response.data
+                    this.current_section_item = response
                     resolve(response)
                 })
-                .catch((errors)=>{
-                    reject(errors)
-                })
-
+                .catch((errors)=>reject(errors))
             })
         },
-
-
-        
-
       
         async deleteSection(id){
 

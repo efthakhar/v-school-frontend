@@ -9,7 +9,7 @@ import {useSessionStore} from '../../session/store'
 import {useConfirmStore} from '../../../../stores/confirm'
 
 import AddSectionSidebar from '../../../../modules/academic/section/components/add-section.vue';
-// import EditClass from '../../../../modules/academic/class/components/edit-class.vue';
+import EditSectionSIdebar from '../../../../modules/academic/section/components/edit-section.vue';
 // import ViewClass from '../../../../modules/academic/class/components/view-class.vue';
 import pagination from '../../../../components/shared/pagination.vue';
 import loader from '../../../../components/shared/loader.vue';
@@ -22,9 +22,7 @@ const sessionStore = useSessionStore()
 
 
 const {classes, getClasses}   = useClass()
-
-
-// const sections = computed(() =>  sectionStore.sections) 
+ 
 
 const editSectionSidebar = ref(false)
 const addSectionSidebar = ref(false)
@@ -72,10 +70,10 @@ onMounted(()=>{
     sessionStore.fetchSessionsList()
 })
 
-// function openEditSectionSidebar(id){
-//     classStore.edit_class_id = id
-//     editClassSidebar.value = true
-// }
+function openEditSectionSidebar(id){
+    sectionStore.edit_section_id = id
+    editSectionSidebar.value = true
+}
 // function openViewClassSidebar(id){
 //     classStore.view_class_id = id
 //     viewClassSidebar.value = true
@@ -154,12 +152,12 @@ function openAddSectionSidebar(){
                                     <td class="text-right">{{section.room_no}}</td> -->
                                     <td class="text-right">
         
-                                        <!-- <a class="action_btn action_edit_btn" title="edit" 
+                                        <a class="action_btn action_edit_btn" title="edit" 
                                            v-if="userPermissions.includes('class_update')"
-                                           @click="openEditClassSidebar(class_item.id)"
+                                           @click="openEditSectionSidebar(section.id)"
                                         >
                                             &#9998;
-                                        </a> -->
+                                        </a>
                                         
                                         <a class="action_btn action_view_btn" 
                                            title="view" 
@@ -207,12 +205,12 @@ function openAddSectionSidebar(){
                         @close="addSectionSidebar=false" 
                         @refreshData='fetchData(1,sectionStore.filterSessionId,sectionStore.filterClassId)' 
                     />      
-                    <!-- <EditClass
-                        v-if="editClassSidebar" 
-                        :class_id="classStore.edit_class_id"
-                        @refreshData='fetchData(classStore.current_page)' 
-                        @close="editClassSidebar=false" 
-                    /> -->
+                    <EditSectionSIdebar
+                        v-if="editSectionSidebar" 
+                        :section_id="sectionStore.edit_section_id"
+                        @refreshData='fetchData(sectionStore.current_page)' 
+                        @close="editSectionSidebar=false" 
+                    />
                     <!-- <ViewClass
                         v-if="viewClassSidebar" 
                         :class_id="classStore.view_class_id"
