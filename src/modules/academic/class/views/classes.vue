@@ -1,7 +1,7 @@
 <script setup>
 import { useAuthInfo } from '../../../../stores/authinfo';
 import {useConfirmStore} from '../../../../stores/confirm'
-import { computed, onMounted, ref } from '@vue/runtime-core';    
+import { computed, onMounted, onUnmounted, ref } from '@vue/runtime-core';    
 import { useClassStore } from '../store';
 import {useSessionStore} from '../../session/store'
 
@@ -48,6 +48,10 @@ async function deleteData(id){
 onMounted(()=>{
     sessionStore.fetchSessionsList()
     fetchData(1)
+})
+
+onUnmounted(()=>{
+   classStore.filter_session_id = ''
 })
 
 async function onSessionChange(){

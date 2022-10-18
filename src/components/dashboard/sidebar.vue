@@ -1,10 +1,12 @@
 <script>
 import SideNavItem from "./side-nav-item.vue"
-
+import { sidebarStatus } from '../../stores/sidebar-status.js'
 export default{
      components:{ SideNavItem},
     data(){
         return{
+            sideNav: sidebarStatus(),
+            screen_width: '',
             navlinks:[
                 
                 {   
@@ -47,6 +49,9 @@ export default{
                 
             ]
         }
+    },
+    mounted(){     
+        this.screen_width = window.innerWidth
     }
 }
 
@@ -56,6 +61,10 @@ export default{
 <div>
     <div class="sidebar-logo">
         <router-link to="/">V-SchooL</router-link>
+        <span class="close_sidebar"  
+             v-if="sideNav.collapsed==false  && screen_width<=450"
+             @click="sideNav.toggleCollapse()"
+        > &#10060; </span> 
     </div>
     <ul class="sidebar-nav-items">  
         <SideNavItem v-for="navlink in navlinks" :key="navlink"
@@ -67,6 +76,12 @@ export default{
 </template>
 
 <style>
+.sidebar-logo{ position: relative;}
+.close_sidebar{
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+}
 .sidebar-logo{
     height: 60px;
     display: flex;

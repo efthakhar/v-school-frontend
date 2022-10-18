@@ -1,6 +1,6 @@
 <script setup>
 import { useAuthInfo } from '../../../../stores/authinfo';
-import { computed, onMounted, ref } from '@vue/runtime-core';    
+import { computed, onMounted, onUnmounted, ref } from '@vue/runtime-core';    
 import {useClass} from '../../class/composable/useClass'
 
 
@@ -71,6 +71,10 @@ onMounted(()=>{
     sessionStore.fetchSessionsList()
 })
 
+onUnmounted(()=>{
+    sectionStore.filterClassId = ''
+    sectionStore.filterSessionId = ''
+})
 function openEditSectionSidebar(id){
     sectionStore.edit_section_id = id
     editSectionSidebar.value = true

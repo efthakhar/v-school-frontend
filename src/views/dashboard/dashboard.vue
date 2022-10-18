@@ -7,15 +7,15 @@ import Sidebar from '../../components/dashboard/sidebar.vue';
 import Header from '../../components/dashboard/header.vue';
 import NotificationsContainer from '../../components/shared/notifications-container.vue';
 
-import { computed, onMounted } from '@vue/runtime-core';
+import { computed, onMounted, ref } from '@vue/runtime-core';
 import ConfirmBox from '../../components/shared/confirmBox.vue';
 
 const sidebar_status = sidebarStatus()
-
+const screen_width = ref('')
 const confirmStore = useConfirmStore()
 
 onMounted(()=>{
-    
+    screen_width.value = window.innerWidth
     if (window.innerWidth < 760) 
     {
          sidebar_status.hideSidebar()
@@ -33,14 +33,17 @@ onMounted(()=>{
         <ConfirmBox v-if="confirmStore.show_confirm_box" />
     </div>
     <div class="dashboard-sidebar" 
-     :class=" sidebar_status.collapsed == true ? 'dashboard-sidebar-responsive':''">
+     :class="sidebar_status.collapsed == true ? 
+     'dashboard-sidebar-responsive':''">
         <Sidebar/>
     </div>
     <div>
         <NotificationsContainer />
     </div>
     
-    <div class="dashboard-content">
+    <div class="dashboard-content"
+    :class="sidebar_status.collapsed !== true ? 'dashboard-responsive':''"
+    >
         <Header />
         
         <div class="main-content">
@@ -65,13 +68,19 @@ onMounted(()=>{
 .dashboard-sidebar{
     border-right: 2px solid #5797F8;
     width: 200px;
-    height: 100vh;
     background-color: rgba(255, 255, 255, 0.959);
     z-index: 10;
     box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.37);
     height: 100vh;
     overflow: auto;
     transition: all .5s;
+}
+
+@media screen and (max-width: 650px){
+    .dashboard-responsive{ 
+        position: absolute;
+        left:200px;
+    }
 }
 .dashboard-content{
     flex: 1 1 0;

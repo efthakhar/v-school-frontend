@@ -1,4 +1,5 @@
 <script>
+ import { sidebarStatus } from  '../../stores/sidebar-status.js'
 import { useAuthInfo } from '../../stores/authinfo';    
 export default{
     props:{ navdetails: Object },
@@ -9,12 +10,19 @@ export default{
             subnav : this.navdetails.subnavlinks? true : false,
             isOpened: false,
             userPermissions: useAuthInfo().getPermissions,
+            sideNav: sidebarStatus(),
+            screen_width: ''
        }      
     },
     methods:{
-        toggle(){
+        toggle(link){
             this.isOpened = !this.isOpened
+            
+            this.screen_width<=450 && link ? this.sideNav.toggleCollapse():''
            
+        },
+        handleResize() {
+            this.screen_width = window.innerWidth;
         }
     },
     mounted(){
@@ -26,7 +34,15 @@ export default{
         }
        }
        
-    }
+    },
+    created() {
+        window.addEventListener('resize', this.handleResize);
+        this.handleResize();
+    },
+    destroyed() {
+        window.removeEventListener('resize', this.handleResize);
+    },
+    
 
     
 }
@@ -40,7 +56,7 @@ export default{
                 :to="subnav ?'' : navdetails.navlink"
                 v-if="userPermissions.includes(navdetails.permission)||subnav!=false"
                 :class="this.$route.path==navdetails.navlink && !subnav ?'active-nav-link':''"
-                class="side-nav-link" @click="toggle"
+                class="side-nav-link" @click="toggle(navdetails.navlink)"
               >
                 {{navdetails.navlinktext}}
              </RouterLink>
@@ -52,6 +68,8 @@ export default{
                          v-if="userPermissions.includes(sublink.permission)"
                         :class="this.$route.path.includes(sublink.subnavtext)?'active-nav-link':''"
                         :to="sublink.subnavlink" class="side-nav-sublink"
+                        v-on:click="screen_width<=450? sideNav.toggleCollapse():''"
+                       
                     >
                         {{sublink.subnavtext}}
                     </RouterLink>
